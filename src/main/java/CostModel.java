@@ -54,7 +54,7 @@ public class CostModel {
         double totalCost;
 
         totalReadingSize = tupleNum * tupleSize;
-        totalReadBlocks = totalReadingSize / blockSize + totalReadingSize % blockSize;
+        totalReadBlocks = (int) Math.ceil(totalReadingSize / (double) blockSize);
 
         if (sequential) {
             totalCost = tupleNum * sequentialTupleCost + totalReadBlocks * sequentialBlockCost;
