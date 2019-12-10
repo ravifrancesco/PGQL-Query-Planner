@@ -1,3 +1,5 @@
+package costModel;
+
 public class CostModel {
 
     private int blockSize;
