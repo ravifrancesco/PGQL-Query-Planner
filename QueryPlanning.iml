@@ -9,5 +9,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="org.apache.datasketches:datasketches-memory:1.2.0-incubating" level="project" />
+    <orderEntry type="library" name="org.apache.commons:commons-csv:1.6" level="project" />
   </component>
 </module>
