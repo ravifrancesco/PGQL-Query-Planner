@@ -1,5 +1,7 @@
 package costModel;
 
+import org.apache.commons.lang3.SystemUtils;
+
 public class CostModel {
 
     private int blockSize;

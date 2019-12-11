@@ -2,24 +2,19 @@ package graphStatistics;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class graphDataSketches {
 
-    private static String edgeCsvPath;
-    private static String vertexCsvPath;
+    public List<String> createSketches(String vertexCsvPath, String edgeCsvPatch) throws IOException { //Prova
 
-    public graphDataSketches(String edgeCsvPath, String vertexCsvPath) {
-        this.edgeCsvPath = edgeCsvPath;
-        this.vertexCsvPath = vertexCsvPath;
-    }
+        List<String> csvHeaders;
 
-    public static void main(String[] args) throws IOException { //Prova
         try (
                 Reader reader = Files.newBufferedReader(Paths.get(vertexCsvPath));
                 CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
@@ -27,6 +22,10 @@ public class graphDataSketches {
                         .withIgnoreHeaderCase()
                         .withTrim());
         ) {
+            csvHeaders = csvParser.getHeaderNames();
+            System.out.println(csvHeaders.toString());
+            return csvHeaders;
+            /*
             for (CSVRecord csvRecord : csvParser) {
                 // Accessing values by Header names
                 String name = csvRecord.get("Name");
@@ -42,6 +41,7 @@ public class graphDataSketches {
                 System.out.println("Country : " + country);
                 System.out.println("---------------\n\n");
             }
+             */
         }
 
     }
