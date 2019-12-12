@@ -1,4 +1,4 @@
-package graph.dataSketches.Setup;
+package graph.dataSketches.setup;
 
 import com.google.gson.Gson;
 
@@ -25,8 +25,21 @@ public class GraphMetadata {
     private HashMap<String, Boolean> edgeCsvColumns = new HashMap<>();
 
     // constructor
-    public GraphMetadata (String graphName) {
+    public GraphMetadata (String graphName, int vertexTableLength, int edgeTableLength,
+                          HashMap<String, GraphColumnSketchesWrite> graphVertexSketches,
+                          HashMap<String, GraphColumnSketchesWrite> graphEdgeSketches) {
         this.graphName = graphName;
+        this.vertexTableLength = vertexTableLength;
+        this.edgeTableLength = edgeTableLength;
+
+        for (String key: graphVertexSketches.keySet()) {
+            this.vertexCsvColumns.put(key, graphVertexSketches.get(key).isNum());
+        }
+
+        for (String key: graphEdgeSketches.keySet()) {
+            this.vertexCsvColumns.put(key, graphEdgeSketches.get(key).isNum());
+        }
+
     }
 
     // saves this object to file in /graphName/graphMetadata.json
@@ -42,40 +55,12 @@ public class GraphMetadata {
     }
 
     // setters
-    public void setGraphName(String graphName) {
-        this.graphName = graphName;
-    }
-
-    public void setVertexCsvPath(String vertexCsvPath) {
-        this.vertexCsvPath = vertexCsvPath;
-    }
-
-    public void setEdgeCsvPath(String edgeCsvPath) {
-        this.edgeCsvPath = edgeCsvPath;
-    }
-
     public void setVertexTableLength(int vertexTableLength) {
         this.vertexTableLength = vertexTableLength;
     }
 
     public void setEdgeTableLength(int edgeTableLength) {
         this.edgeTableLength = edgeTableLength;
-    }
-
-    public void setVertexCsvColumns(HashMap<String, GraphColumnSketchesWrite> graphVertexSketches) {
-
-        for (String key: graphVertexSketches.keySet()) {
-            vertexCsvColumns.put(key, graphVertexSketches.get(key).isNum());
-        }
-
-    }
-
-    public void setEdgeCsvHColumns(HashMap<String, GraphColumnSketchesWrite> graphEdgeSketches) {
-
-        for (String key: graphEdgeSketches.keySet()) {
-            vertexCsvColumns.put(key, graphEdgeSketches.get(key).isNum());
-        }
-
     }
 
     // getters

@@ -1,4 +1,4 @@
-package graph.dataSketches.Setup;
+package graph.dataSketches.setup;
 
 /**
  * Enum containing possible Csv types

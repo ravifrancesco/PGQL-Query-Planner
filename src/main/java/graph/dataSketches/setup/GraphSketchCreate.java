@@ -1,4 +1,4 @@
-package graph.dataSketches.Setup;
+package graph.dataSketches.setup;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -26,32 +26,37 @@ import java.util.List;
 
 public class GraphSketchCreate {
 
+    private String graphName;
+
     private String vertexCsvPath;
     private String edgeCsvPath;
 
-    private String graphName;
+    private int vertexTableLength;
+    private int edgeTableLength;
 
     private HashMap<String, GraphColumnSketchesWrite> graphVertexSketches = new HashMap<>();
     private HashMap<String, GraphColumnSketchesWrite> graphEdgeSketches = new HashMap<>();
 
     // constructor
-    public GraphSketchCreate(String graphName, String vertexCsvPath, String edgeCsvPath) {
+    public GraphSketchCreate(String graphName) {
         this.graphName = graphName;
-        this.vertexCsvPath = vertexCsvPath;
-        this.edgeCsvPath = edgeCsvPath;
     }
 
-    // handles parsing, creation and save of edge and vertex csv
+    // handles parsing, creation and save of edge and vertex csv and saves metadata to .json
     public void graphToSketches() throws IOException {
-        csvToSketches(graphVertexSketches, vertexCsvPath, CsvType.VERTEX);
-        csvToSketches(graphEdgeSketches, edgeCsvPath, CsvType.EDGE);
+        this.vertexTableLength = csvToSketches(graphVertexSketches, vertexCsvPath, CsvType.VERTEX);
+        this.edgeTableLength = csvToSketches(graphEdgeSketches, edgeCsvPath, CsvType.EDGE);
+        GraphMetadata graphMetadata = new GraphMetadata(graphName, vertexTableLength, edgeTableLength,
+                                                        graphVertexSketches, graphEdgeSketches);
+        graphMetadata.saveMetadataToJson();
     }
 
     // handles the parsing of the Csv
-    private void csvToSketches(HashMap<String, GraphColumnSketchesWrite> graphSketches,
+    private int csvToSketches(HashMap<String, GraphColumnSketchesWrite> graphSketches,
                                String csvPath, CsvType type) throws IOException {
 
         List<String> csvHeaders;
+        int tableLength;
 
         try (
                 Reader reader = Files.newBufferedReader(Paths.get(vertexCsvPath));
@@ -62,7 +67,8 @@ public class GraphSketchCreate {
         ) {
             csvHeaders = csvParser.getHeaderNames();
             System.out.println(csvHeaders.toString()); //Testing purposes
-            createSketches(graphSketches, csvParser, csvHeaders, type);
+            tableLength = createSketches(graphSketches, csvParser, csvHeaders, type);
+            return tableLength;
         }
 
     }
@@ -77,10 +83,11 @@ public class GraphSketchCreate {
     }
 
     // handles the creation and update of the sketches during the parsing of the Csv
-    private void createSketches(HashMap<String, GraphColumnSketchesWrite> graphSketches,
+    private int createSketches(HashMap<String, GraphColumnSketchesWrite> graphSketches,
                                 CSVParser csvParser, List<String> csvHeaders, CsvType type) {
 
         boolean initialized = false;
+        int tableLength = 0;
 
         for (CSVRecord csvRecord: csvParser) {
             if (!initialized) {
@@ -88,7 +95,10 @@ public class GraphSketchCreate {
                 initialized = true;
             }
             updateSketches(graphSketches, csvRecord, csvHeaders);
+            ++tableLength;
         }
+
+        return tableLength;
 
     }
 

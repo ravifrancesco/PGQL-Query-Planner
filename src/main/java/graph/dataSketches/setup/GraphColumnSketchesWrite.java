@@ -1,4 +1,4 @@
-package graph.dataSketches.Setup;
+package graph.dataSketches.setup;
 
 import org.apache.datasketches.ArrayOfStringsSerDe;
 import org.apache.datasketches.frequencies.ItemsSketch;
