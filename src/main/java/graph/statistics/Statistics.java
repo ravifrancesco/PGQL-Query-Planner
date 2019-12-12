@@ -1,10 +1,16 @@
-package graph.graphDataSketches.Load;
+package graph.statistics;
 
 import com.google.gson.Gson;
-import graph.graphDataSketches.Setup.GraphMetadata;
+import graph.dataSketches.load.EdgeStatistics;
+import graph.dataSketches.load.VertexStatistics;
+import graph.dataSketches.setup.GraphMetadata;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+
+/**
+ * Da continuare
+ */
 
 public class Statistics {
 
