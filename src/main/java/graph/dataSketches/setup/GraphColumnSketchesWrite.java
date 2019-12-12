@@ -1,4 +1,4 @@
-package graphDataSketch;
+package graph.dataSketches.Setup;
 
 import org.apache.datasketches.ArrayOfStringsSerDe;
 import org.apache.datasketches.frequencies.ItemsSketch;
@@ -21,7 +21,7 @@ import java.io.IOException;
  * The sketches are saved in the object as private attributes
  */
 
-public class graphColumnSketches {
+public class GraphColumnSketchesWrite {
 
     private UpdateSketch distinctCountingSketch; //Distinct counting
     private ItemsSketch<String> mostFrequentSketch; //Most frequent
@@ -32,7 +32,7 @@ public class graphColumnSketches {
     private CsvType type;
 
     // constructor
-    public graphColumnSketches(Boolean number, CsvType type) {
+    public GraphColumnSketchesWrite(Boolean number, CsvType type) {
 
         this.type = type;
         this.isNum = number;
@@ -114,7 +114,7 @@ public class graphColumnSketches {
     }
 
     // returns true if column contains numbers, otherwise returns false
-    private Boolean isNum() {
+    public Boolean isNum() {
         return isNum;
     }
 

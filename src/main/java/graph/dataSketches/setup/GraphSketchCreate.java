@@ -1,4 +1,4 @@
-package graphDataSketch;
+package graph.dataSketches.Setup;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -13,8 +13,8 @@ import java.util.List;
 
 /**
  * This class is used to parse csv, create sketches for the graph and save them. The constructor takes as arguments:
- *      - vertexCsvPath to parse the vertex Csv and create sketches for each column of table
- *      - edgeCsvPath to parse the edge Csv and create sketches for (aggiungere)
+ *      - vertexCsvPath to parse the vertex Csv and create sketches for each column of the table
+ *      - edgeCsvPath to parse the edge Csv and create sketches for each column of the table
  *      - graphName as an identifier for the graph and for the sketches (name can be arbitrary)
  *
  * Sketches for each column are accessed through hashmap graphSketches
@@ -24,18 +24,18 @@ import java.util.List;
  * More on the creation and save of the sketches in class graphColumnSketches
 */
 
-public class graphSketchCreate {
+public class GraphSketchCreate {
 
     private String vertexCsvPath;
     private String edgeCsvPath;
 
     private String graphName;
 
-    private HashMap<String, graphColumnSketches> graphVertexSketches = null;
-    private HashMap<String, graphColumnSketches> graphEdgeSketches = null;
+    private HashMap<String, GraphColumnSketchesWrite> graphVertexSketches = new HashMap<>();
+    private HashMap<String, GraphColumnSketchesWrite> graphEdgeSketches = new HashMap<>();
 
     // constructor
-    public graphSketchCreate(String graphName, String vertexCsvPath, String edgeCsvPath) {
+    public GraphSketchCreate(String graphName, String vertexCsvPath, String edgeCsvPath) {
         this.graphName = graphName;
         this.vertexCsvPath = vertexCsvPath;
         this.edgeCsvPath = edgeCsvPath;
@@ -48,7 +48,7 @@ public class graphSketchCreate {
     }
 
     // handles the parsing of the Csv
-    private void csvToSketches(HashMap<String, graphColumnSketches> graphSketches,
+    private void csvToSketches(HashMap<String, GraphColumnSketchesWrite> graphSketches,
                                String csvPath, CsvType type) throws IOException {
 
         List<String> csvHeaders;
@@ -68,17 +68,16 @@ public class graphSketchCreate {
     }
 
     // saves the sketches to .bin files in graph directory
-    private void saveGraphSketchesToFile(HashMap<String, graphColumnSketches> graphSketches) { //Gestire directory di salvataggio
+    private void saveGraphSketchesToFile(HashMap<String, GraphColumnSketchesWrite> graphSketches) { //Gestire directory di salvataggio
 
         for (String key: graphSketches.keySet()) {
-            graphColumnSketches currentGraphColumnSketch = graphSketches.get(key);
-            currentGraphColumnSketch.saveColumnSketchToFile(this.graphName, key);
+            graphSketches.get(key).saveColumnSketchToFile(this.graphName, key);
         }
 
     }
 
     // handles the creation and update of the sketches during the parsing of the Csv
-    private void createSketches(HashMap<String, graphColumnSketches> graphSketches,
+    private void createSketches(HashMap<String, GraphColumnSketchesWrite> graphSketches,
                                 CSVParser csvParser, List<String> csvHeaders, CsvType type) {
 
         boolean initialized = false;
@@ -94,7 +93,7 @@ public class graphSketchCreate {
     }
 
     // initializes 2 sketches for each column of the Csv
-    private void initializeSketchesMap (HashMap<String, graphColumnSketches> graphSketches,
+    private void initializeSketchesMap (HashMap<String, GraphColumnSketchesWrite> graphSketches,
                                         CSVRecord csvRecord, List<String> csvHeaders, CsvType type) {
 
         for (String header: csvHeaders) {
@@ -103,9 +102,9 @@ public class graphSketchCreate {
 
             try {
                 double d = Double.parseDouble(readValue);
-                graphSketches.put(header, new graphColumnSketches(true, type));
+                graphSketches.put(header, new GraphColumnSketchesWrite(true, type));
             } catch (NumberFormatException nfe) {
-                graphSketches.put(header, new graphColumnSketches(false, type));
+                graphSketches.put(header, new GraphColumnSketchesWrite(false, type));
             }
             
         }
@@ -113,13 +112,13 @@ public class graphSketchCreate {
     }
 
     // updates the sketches with new values during the parsing of the Csv
-    private void updateSketches (HashMap<String, graphColumnSketches> graphSketches,
+    private void updateSketches (HashMap<String, GraphColumnSketchesWrite> graphSketches,
                                  CSVRecord csvRecord, List<String> csvHeaders) {
 
         for (String key: graphSketches.keySet()) {
 
             String readValue = csvRecord.get(key);
-            graphColumnSketches currentGraphColumnSketch = graphSketches.get(key);
+            GraphColumnSketchesWrite currentGraphColumnSketch = graphSketches.get(key);
 
             currentGraphColumnSketch.updateColumnSketches(readValue);
 

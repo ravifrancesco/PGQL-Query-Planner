@@ -1,20 +1,19 @@
-package graphDataSketch;
+package graph.dataSketches.Setup;
 
 import com.google.gson.Gson;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * This class stores essential graph information (includes get and set methods)
+ * Information can be saved as .json at /graphName/
  */
 
 public class GraphMetadata {
 
-    private String graphName; //Sistemare posizione dati in lettura
+    private String graphName;
 
     private String vertexCsvPath;
     private String edgeCsvPath;
@@ -22,31 +21,24 @@ public class GraphMetadata {
     private int vertexTableLength;
     private int edgeTableLength;
 
-    private List<String> vertexCsvHeaders;
-    private List<String> edgeCsvHeaders;
+    private HashMap<String, Boolean> vertexCsvColumns = new HashMap<>();
+    private HashMap<String, Boolean> edgeCsvColumns = new HashMap<>();
 
-    // constructor for GraphSketchCreate class
-    public GraphMetadata (String graphName, String vertexCsvPath, String edgeCsvPath) {
+    // constructor
+    public GraphMetadata (String graphName) {
         this.graphName = graphName;
     }
 
     // saves this object to file in /graphName/graphMetadata.json
     public void saveMetadataToJson () throws IOException {
-        String savingPath = returnSketchesDirPath() + "/graphMetadata.json";
+        String savingPath = returnSketchesDirPath() + "graphMetadata.json";
         Gson gson = new Gson();
         gson.toJson(this, new FileWriter(savingPath));
     }
 
-    // construct from json file
-    public GraphMetadata readMetaDataFromJson (String graphName) throws FileNotFoundException {
-        String readingPath = '/' + graphName + "/graphMetadata.json";
-        Gson gson = new Gson();
-        return gson.fromJson(new FileReader(readingPath), GraphMetadata.class);
-    }
-
     // returns path for sketches
-    public String returnSketchesDirPath () {
-        return '/' + this.graphName;
+    public String returnSketchesDirPath () { //Sistemare posizione dati in scrittura
+        return '/' + this.graphName + '/';
     }
 
     // setters
@@ -70,12 +62,20 @@ public class GraphMetadata {
         this.edgeTableLength = edgeTableLength;
     }
 
-    public void setVertexCsvHeaders(List<String> vertexCsvHeaders) {
-        this.vertexCsvHeaders = vertexCsvHeaders;
+    public void setVertexCsvColumns(HashMap<String, GraphColumnSketchesWrite> graphVertexSketches) {
+
+        for (String key: graphVertexSketches.keySet()) {
+            vertexCsvColumns.put(key, graphVertexSketches.get(key).isNum());
+        }
+
     }
 
-    public void setEdgeCsvHeaders(List<String> edgeCsvHeaders) {
-        this.edgeCsvHeaders = edgeCsvHeaders;
+    public void setEdgeCsvHColumns(HashMap<String, GraphColumnSketchesWrite> graphEdgeSketches) {
+
+        for (String key: graphEdgeSketches.keySet()) {
+            vertexCsvColumns.put(key, graphEdgeSketches.get(key).isNum());
+        }
+
     }
 
     // getters
@@ -99,12 +99,12 @@ public class GraphMetadata {
         return edgeTableLength;
     }
 
-    public List<String> getVertexCsvHeaders() {
-        return vertexCsvHeaders;
+    public HashMap<String, Boolean> getVertexCsvColumns() {
+        return vertexCsvColumns;
     }
 
-    public List<String> getEdgeCsvHeaders() {
-        return edgeCsvHeaders;
+    public HashMap<String, Boolean> getEdgeCsvColumns() {
+        return edgeCsvColumns;
     }
 
 }
