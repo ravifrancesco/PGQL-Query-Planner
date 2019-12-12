@@ -1,4 +1,4 @@
-package graphStatistics;
+package graphDataSketch;
 
 import org.apache.datasketches.ArrayOfStringsSerDe;
 import org.apache.datasketches.frequencies.ItemsSketch;
@@ -8,11 +8,6 @@ import org.apache.datasketches.theta.UpdateSketch;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-enum CsvType {
-    EDGE,
-    VERTEX
-}
 
 /**
  * This class contains the sketches for each column and some methods used by class graphDataSketches

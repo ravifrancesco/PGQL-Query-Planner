@@ -1,4 +1,4 @@
-package graphStatistics;
+package graphDataSketch;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -24,7 +24,7 @@ import java.util.List;
  * More on the creation and save of the sketches in class graphColumnSketches
 */
 
-public class graphDataSketches {
+public class graphSketchCreate {
 
     private String vertexCsvPath;
     private String edgeCsvPath;
@@ -35,7 +35,7 @@ public class graphDataSketches {
     private HashMap<String, graphColumnSketches> graphEdgeSketches = null;
 
     // constructor
-    public graphDataSketches(String graphName, String vertexCsvPath, String edgeCsvPath) {
+    public graphSketchCreate(String graphName, String vertexCsvPath, String edgeCsvPath) {
         this.graphName = graphName;
         this.vertexCsvPath = vertexCsvPath;
         this.edgeCsvPath = edgeCsvPath;
