@@ -8,9 +8,14 @@ import java.util.HashMap;
 
 /**
  * This class loads and stores sketches of the edges of the graph
+ * It is created by GetSketches class. The constructor uses the metadata
+ * to create the object.
+ *
+ * It enables sketch updates (has to be implemented)
+ *
  */
 
-public class EdgeStatistics extends SketchLoader {
+public class EdgeSketches extends SketchLoader {
     
     private String edgeCsvPath;
     private int edgeTableLength;
@@ -21,7 +26,7 @@ public class EdgeStatistics extends SketchLoader {
     private HashMap<String, GraphColumnSketchesRead> edgeSketchesHashMap = new HashMap<>();
 
     // constructor
-    public EdgeStatistics (GraphMetadata graphMetadata) throws IOException {
+    public EdgeSketches(GraphMetadata graphMetadata) throws IOException {
         this.edgeCsvPath = graphMetadata.getEdgeCsvPath();
         this.edgeTableLength = graphMetadata.getEdgeTableLength();
         this.edgeCsvColumns = graphMetadata.getEdgeCsvColumns();

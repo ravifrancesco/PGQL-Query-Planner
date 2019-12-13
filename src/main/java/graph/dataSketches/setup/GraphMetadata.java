@@ -21,8 +21,8 @@ public class GraphMetadata {
     private int vertexTableLength;
     private int edgeTableLength;
 
-    private HashMap<String, Boolean> vertexCsvColumns = new HashMap<>();
-    private HashMap<String, Boolean> edgeCsvColumns = new HashMap<>();
+    private HashMap<String, ColumnDataTypes> vertexCsvColumns = new HashMap<>();
+    private HashMap<String, ColumnDataTypes> edgeCsvColumns = new HashMap<>();
 
     // constructor
     public GraphMetadata (String graphName, int vertexTableLength, int edgeTableLength,
@@ -33,11 +33,11 @@ public class GraphMetadata {
         this.edgeTableLength = edgeTableLength;
 
         for (String key: graphVertexSketches.keySet()) {
-            this.vertexCsvColumns.put(key, graphVertexSketches.get(key).isNum());
+            this.vertexCsvColumns.put(key, graphVertexSketches.get(key).columnDataTypes());
         }
 
         for (String key: graphEdgeSketches.keySet()) {
-            this.vertexCsvColumns.put(key, graphEdgeSketches.get(key).isNum());
+            this.vertexCsvColumns.put(key, graphEdgeSketches.get(key).columnDataTypes());
         }
 
     }
@@ -84,11 +84,11 @@ public class GraphMetadata {
         return edgeTableLength;
     }
 
-    public HashMap<String, Boolean> getVertexCsvColumns() {
+    public HashMap<String, ColumnDataTypes> getVertexCsvColumns() {
         return vertexCsvColumns;
     }
 
-    public HashMap<String, Boolean> getEdgeCsvColumns() {
+    public HashMap<String, ColumnDataTypes> getEdgeCsvColumns() {
         return edgeCsvColumns;
     }
 

@@ -1,5 +1,6 @@
 package graph.dataSketches.load;
 
+import graph.dataSketches.setup.ColumnDataTypes;
 import org.apache.datasketches.ArrayOfStringsSerDe;
 import org.apache.datasketches.frequencies.ItemsSketch;
 import org.apache.datasketches.memory.Memory;
@@ -20,6 +21,8 @@ public class GraphColumnSketchesRead {
     private Sketch distinctCountingSketch; //Distinct counting
     private ItemsSketch<String> mostFrequentSketch; //Most frequent
     private DoublesSketch quantileSketch; //Quantile Sketch
+
+    private ColumnDataTypes columnType;
 
     // reads distinctCountingSketches from .bin
     public void readDistinctCountingSketch(String pathToColumnFolder) throws IOException {
@@ -50,8 +53,16 @@ public class GraphColumnSketchesRead {
 
 
     // setters
+    public void setDistinctCountingSketch(Sketch distinctCountingSketch) {
+        this.distinctCountingSketch = distinctCountingSketch;
+    }
+
     public void setMostFrequentSketch(ItemsSketch<String> mostFrequentSketch) {
         this.mostFrequentSketch = mostFrequentSketch;
+    }
+
+    public void setColumnType(ColumnDataTypes columnType) {
+        this.columnType = columnType;
     }
 
     public void setQuantileSketch(DoublesSketch quantileSketch) {
@@ -69,5 +80,9 @@ public class GraphColumnSketchesRead {
 
     public DoublesSketch getQuantileSketch() {
         return quantileSketch;
+    }
+
+    public ColumnDataTypes getColumnType() {
+        return columnType;
     }
 }

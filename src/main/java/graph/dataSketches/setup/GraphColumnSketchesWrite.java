@@ -11,10 +11,10 @@ import java.io.IOException;
 
 /**
  * This class contains the sketches for each column and some methods used by class graphDataSketches
- * The constructor takes boolean number as argument (wich indicates if column contains numbers or stirngs):
- *      - it creates a distinctCountingSketch
- *      - if boolean number == true it creates a quantileSketch
- *      - if boolean number == false it creates a mostFrequentSketch
+ * The constructor takes ColumnDataTypes as argument (wich indicates type of data contained in the column):
+ *      - if columnType is NUM true it creates a quantileSketch
+ *      - if columnType is STRING false it creates a mostFrequentSketch and a distinctCountingSketch
+ *      - other types can be added in enum ColumnDataTypes and data type specific methods can be added
  *
  * Enum CsvType is used to determine if column is from edge or vertex Csv and for determining directory for .bin files
  *
@@ -27,24 +27,25 @@ public class GraphColumnSketchesWrite {
     private ItemsSketch<String> mostFrequentSketch; //Most frequent
     private UpdateDoublesSketch quantileSketch; //Quantile Sketch
 
-    private boolean isNum;
+    private ColumnDataTypes columnType;
 
-    private CsvType type;
+    private CsvTypes csvType;
 
     // constructor
-    public GraphColumnSketchesWrite(Boolean number, CsvType type) {
+    public GraphColumnSketchesWrite(ColumnDataTypes columnType, CsvTypes csvType) {
 
-        this.type = type;
-        this.isNum = number;
+        this.csvType = csvType;
+        this.columnType = columnType;
 
-        createDistinctCountingSketch();
-
-        if (isNum) {
+        if (columnType == ColumnDataTypes.NUM) {
             createQuantileSketch();
             this.mostFrequentSketch = null;
-        } else {
+        } else if (columnType == ColumnDataTypes.STRING){
+            createDistinctCountingSketch();
             createMostFrequentSketch();
             this.quantileSketch = null;
+        } else {
+            // aggiungere gestione altri tipi
         }
 
     }
@@ -52,17 +53,18 @@ public class GraphColumnSketchesWrite {
     // handles update of sketches in this object
     public void updateColumnSketches(String readValue) {
 
-        if (this.isNum) {
+        if (this.columnType == ColumnDataTypes.NUM) {
             try {
                 double newValue = Double.parseDouble(readValue);
-                this.distinctCountingSketch.update(newValue);
                 this.quantileSketch.update(newValue);
             } catch (NumberFormatException nfe) {
                 //Aggiungere gestione errori
             }
-        } else {
+        } else if (this.columnType == ColumnDataTypes.STRING){
             this.distinctCountingSketch.update(readValue);
             this.mostFrequentSketch.update(readValue);
+        } else {
+            // aggiungere gestione altri tipi
         }
 
     }
@@ -72,12 +74,14 @@ public class GraphColumnSketchesWrite {
 
         String columnDir = createSavingDirectoryPatch(graphName, columnName);
 
-        if (this.isNum) {
+        if (this.columnType == ColumnDataTypes.NUM) {
             saveQuantileSketchToFile(columnDir);
-        } else {
+        } else if (this.columnType == ColumnDataTypes.STRING){
+            saveDistinctCountingSketchToFile(columnDir);
             saveMostFrequentSketchToFile(columnDir);
+        } else {
+            // aggiungere gestione altri tipi
         }
-        saveDistinctCountingSketchToFile(columnDir);
     }
 
     // handles saving of distinctCountingSketch to .bin file
@@ -106,7 +110,7 @@ public class GraphColumnSketchesWrite {
     private void saveQuantileSketchToFile(String columnDir) {
         try {
             FileOutputStream outDistinctCountingSketch = new FileOutputStream(columnDir + "/DistinctCountingSketch.bin");
-            outDistinctCountingSketch.write(distinctCountingSketch.compact().toByteArray());
+            outDistinctCountingSketch.write(this.distinctCountingSketch.compact().toByteArray());
             outDistinctCountingSketch.close();
         } catch (IOException ioe) {
             //Aggiungere gestione errori
@@ -114,8 +118,8 @@ public class GraphColumnSketchesWrite {
     }
 
     // returns true if column contains numbers, otherwise returns false
-    public Boolean isNum() {
-        return isNum;
+    public ColumnDataTypes columnDataTypes() {
+        return columnType;
     }
 
     // handles creation of distinctCountingSketch object
@@ -138,9 +142,9 @@ public class GraphColumnSketchesWrite {
 
         String columnDir;
 
-        if (this.type == CsvType.VERTEX) {
+        if (this.csvType == CsvTypes.VERTEX) {
             columnDir = '/' + graphName + '/' + "vertex" + '/' + columnName;
-        } else if (this.type == CsvType.EDGE) {
+        } else if (this.csvType == CsvTypes.EDGE) {
             columnDir = '/' + graphName + '/' + "edge" + '/' + columnName;
         } else {
             columnDir = null; //Aggiungere gestione type sbagliato

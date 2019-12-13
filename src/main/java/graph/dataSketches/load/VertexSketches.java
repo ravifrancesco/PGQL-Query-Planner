@@ -8,9 +8,13 @@ import java.util.HashMap;
 
 /**
  * This class loads and stores sketches of the vertexes of the graph
+ * It is created by GetSketches class. The constructor uses the metadata
+ * to create the object.
+ *
+ * It enables sketch updates (has to be implemented)
  */
 
-public class VertexStatistics extends SketchLoader {
+public class VertexSketches extends SketchLoader {
 
     private String vertexCsvPath;
     private int vertexTableLength;
@@ -21,7 +25,7 @@ public class VertexStatistics extends SketchLoader {
     private HashMap<String, GraphColumnSketchesRead> vertexSketchesHashMap = new HashMap<>();
 
     // constructor
-    public VertexStatistics (GraphMetadata graphMetadata) throws IOException {
+    public VertexSketches(GraphMetadata graphMetadata) throws IOException {
         this.vertexCsvPath = graphMetadata.getVertexCsvPath();
         this.vertexTableLength = graphMetadata.getVertexTableLength();
         this.vertexCsvColumns = graphMetadata.getVertexCsvColumns();
