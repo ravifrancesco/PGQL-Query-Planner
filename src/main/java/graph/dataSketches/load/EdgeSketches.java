@@ -1,5 +1,6 @@
 package graph.dataSketches.load;
 
+import graph.dataSketches.setup.ColumnDataTypes;
 import graph.dataSketches.setup.GraphMetadata;
 
 import java.io.IOException;
@@ -13,26 +14,34 @@ public class EdgeStatistics extends SketchLoader {
     
     private String edgeCsvPath;
     private int edgeTableLength;
-    private HashMap<String, Boolean> edgeCsvColumns;
+    private HashMap<String, ColumnDataTypes> edgeCsvColumns;
 
     private String edgeSketchesPath;
 
     private HashMap<String, GraphColumnSketchesRead> edgeSketchesHashMap = new HashMap<>();
 
     // constructor
-    public EdgeStatistics (GraphMetadata graphMetadata) {
+    public EdgeStatistics (GraphMetadata graphMetadata) throws IOException {
         this.edgeCsvPath = graphMetadata.getEdgeCsvPath();
         this.edgeTableLength = graphMetadata.getEdgeTableLength();
         this.edgeCsvColumns = graphMetadata.getEdgeCsvColumns();
         this.edgeSketchesPath = graphMetadata.returnSketchesDirPath() +  "edge/";
+
+        this.loadEdgeSketches();
+
     }
 
     // create sketches HashMap
-    public void loadEdgeSketches () throws IOException { //Gestire errori
-        for (String key: edgeCsvColumns.keySet()) {
-            boolean isNum = edgeCsvColumns.get(key);
-            edgeSketchesHashMap.put(key, loadColumnSketch(edgeSketchesPath, key, isNum));
+    private void loadEdgeSketches () throws IOException { //Gestire errori
+        for (String key: this.edgeCsvColumns.keySet()) {
+            ColumnDataTypes columnType = this.edgeCsvColumns.get(key);
+            this.edgeSketchesHashMap.put(key, loadColumnSketch(this.edgeSketchesPath, key, columnType));
         }
+    }
+
+    // update statistics
+    public void updateEdgeStatistic() {
+        // da costruire
     }
 
     // getters
