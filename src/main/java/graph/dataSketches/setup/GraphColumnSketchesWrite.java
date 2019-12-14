@@ -3,11 +3,15 @@ package graph.dataSketches.setup;
 import org.apache.datasketches.ArrayOfStringsSerDe;
 import org.apache.datasketches.frequencies.ItemsSketch;
 import org.apache.datasketches.quantiles.DoublesSketch;
+import org.apache.datasketches.quantiles.DoublesSketchBuilder;
 import org.apache.datasketches.quantiles.UpdateDoublesSketch;
 import org.apache.datasketches.theta.UpdateSketch;
+import settings.SketchesMemorySetting;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import static java.lang.Math.pow;
 
 /**
  * This class contains the sketches for each column and some methods used by class graphDataSketches
@@ -31,11 +35,15 @@ public class GraphColumnSketchesWrite {
 
     private CsvTypes csvType;
 
+    private SketchesMemorySetting settings;
+
     // constructor
     public GraphColumnSketchesWrite(ColumnDataTypes columnType, CsvTypes csvType) {
 
         this.csvType = csvType;
         this.columnType = columnType;
+
+        this.settings = new SketchesMemorySetting();
 
         if (columnType == ColumnDataTypes.NUM) {
             createQuantileSketch();
@@ -124,17 +132,45 @@ public class GraphColumnSketchesWrite {
 
     // handles creation of distinctCountingSketch object
     private void createDistinctCountingSketch() {
-        this.distinctCountingSketch = UpdateSketch.builder().build(); // gestire dimensione sketch
+        this.distinctCountingSketch = UpdateSketch.builder().build();
     }
 
     // handles creation of mostFrequentSketch object
     private void createMostFrequentSketch() {
-        this.mostFrequentSketch = new ItemsSketch<String>(64); //Gestire dimensione sketch
+
+        int mostFrequentItemsNum;
+
+        // set mostFrequentItemSketch dimension, please refer to DataSKetches documentation
+        if (this.csvType == CsvTypes.VERTEX) {
+            mostFrequentItemsNum = settings.getMostFrequentVertexItemsNum();
+        } else if (this.csvType == CsvTypes.EDGE) {
+            mostFrequentItemsNum = settings.getMostFrequentEdgeItemsNum();
+        } else {
+            mostFrequentItemsNum = settings.getDefaultFrequentItemsNum(); // default value, shouldn't enter the else statement
+        }
+
+        int hashMapSize = (int) pow(2, mostFrequentItemsNum);
+        this.mostFrequentSketch = new ItemsSketch<String>(hashMapSize);
+
     }
 
     // handles creation of quantileSketch object
-    private void createQuantileSketch () { // default k=128, gestire dimensione
-        this.quantileSketch = DoublesSketch.builder().build();
+    private void createQuantileSketch () {
+
+        int quantileSketchK;
+
+        // set quantileSketch k, please refer to DataSKetches documentation
+        if (this.csvType == CsvTypes.VERTEX) {
+            quantileSketchK = settings.getQuantileSketchVertexK();
+        } else if (this.csvType == CsvTypes.EDGE) {
+            quantileSketchK = settings.getQuantileSketchEdgeK();
+        } else {
+            quantileSketchK = settings.getQuantileSketchDefaultK(); // default value, shouldn't enter the else statement
+        }
+
+        DoublesSketchBuilder quantileSketchBuilder = DoublesSketch.builder().setK(quantileSketchK);
+        this.quantileSketch = quantileSketchBuilder.build();
+
     }
 
     // handles creation of saving directory path
