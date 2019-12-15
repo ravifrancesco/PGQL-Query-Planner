@@ -19,5 +19,8 @@
     <orderEntry type="library" name="org.apache.commons:commons-lang3:3.3.2" level="project" />
     <orderEntry type="library" name="com.google.code.gson:gson:2.8.6" level="project" />
     <orderEntry type="library" name="org.apache.datasketches:datasketches-java:1.1.0-incubating" level="project" />
+    <orderEntry type="library" name="graph-query-ir" level="project" />
+    <orderEntry type="library" name="pgql-spoofax" level="project" />
+    <orderEntry type="library" name="pgql-lang" level="project" />
   </component>
 </module>

@@ -6,8 +6,8 @@ import settings.HardwareCostSettings;
 /**
  * Reachability Operator
  * Used for matching vertices connected via a PATH expression. For example:
- * PATH p as ()->()()
- * SELECT src.age, dst.age MATCH (src)-/:p* /->(dst)
+ *      PATH p as ()->()()
+ *    SELECT src.age, dst.age MATCH (src)-/:p* /->(dst)
  */
 
 public class ReachabilityPlan implements QueryPlan, Comparable<QueryPlan> {

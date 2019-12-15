@@ -13,7 +13,7 @@ import java.io.IOException;
  * This class contains the sketches of the vertexes and the edges of the graph.
  * It creates two objects (vertexSketches and edgeSketches) from the json containing
  * all the information about the graph, It enables access to the sketches in order to
- * retrieve statistics. This class is used by Statistics class
+ * retrieve statistics. This class' methods are used by Statistics class
  */
 
 public class GetSketches {
