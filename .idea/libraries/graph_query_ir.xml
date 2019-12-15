@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="graph-query-ir">
+    <CLASSES>
+      <root url="file://$USER_HOME$/pgql-lang/graph-query-ir" />
+      <root url="file://$USER_HOME$/pgql-lang/pgql-lang" />
+      <root url="file://$USER_HOME$/pgql-lang/pgql-spoofax" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/pgql-lang/graph-query-ir/src/main/java" />
+      <root url="file://$USER_HOME$/pgql-lang/pgql-lang/src/main/java" />
+      <root url="file://$USER_HOME$/pgql-lang/pgql-lang/src/test/java" />
+      <root url="file://$USER_HOME$/pgql-lang/pgql-spoofax/src-gen/stratego-java" />
+      <root url="file://$USER_HOME$/pgql-lang/pgql-spoofax/src/main/strategies" />
+    </SOURCES>
+  </library>
+</component>

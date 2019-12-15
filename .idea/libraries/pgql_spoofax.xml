@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="pgql-spoofax">
+    <CLASSES>
+      <root url="file://$USER_HOME$/pgql-lang/pgql-spoofax" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/pgql-lang/pgql-spoofax/src-gen/stratego-java" />
+      <root url="file://$USER_HOME$/pgql-lang/pgql-spoofax/src/main/strategies" />
+    </SOURCES>
+  </library>
+</component>

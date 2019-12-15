@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="pgql-lang">
+    <CLASSES>
+      <root url="file://$USER_HOME$/pgql-lang/pgql-lang" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/pgql-lang/pgql-lang/src/main/java" />
+      <root url="file://$USER_HOME$/pgql-lang/pgql-lang/src/test/java" />
+    </SOURCES>
+  </library>
+</component>
