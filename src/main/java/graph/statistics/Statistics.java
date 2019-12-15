@@ -21,6 +21,7 @@ public class Statistics extends RetrieveStatistics {
 
     int vertexTableLength;
     int edgeTableLength;
+    int averageVertexDegree;
 
     HashMap<String, GraphColumnSketchesRead> vertexSketchesMap;
     HashMap<String, GraphColumnSketchesRead> edgeSketchesMap;
@@ -28,7 +29,8 @@ public class Statistics extends RetrieveStatistics {
     EstimateBounds estimateBounds; // aggiugnere impostazioni
 
     // constructor
-    public Statistics(String graphName) throws IOException {
+    public Statistics(String graphName, EstimateBounds estimateBounds) throws IOException {
+
         this.graphName = graphName;
         this.graphSketches = new GetSketches(graphName);
 
@@ -37,6 +39,10 @@ public class Statistics extends RetrieveStatistics {
 
         this.vertexSketchesMap = this.graphSketches.getVertexSketches().getVertexSketchesHashMap();
         this.edgeSketchesMap = this.graphSketches.getEdgeSketches().getEdgeSketchesHashMap();
+
+        this.averageVertexDegree = (int) (this.edgeTableLength / this.vertexTableLength);
+
+        this.estimateBounds = estimateBounds;
 
     }
 
@@ -78,6 +84,27 @@ public class Statistics extends RetrieveStatistics {
             return 0; // gestire nessuno dei due casi
         }
 
+    }
+
+    // getters
+    public String getGraphName() {
+        return graphName;
+    }
+
+    public int getVertexTableLength() {
+        return vertexTableLength;
+    }
+
+    public int getEdgeTableLength() {
+        return edgeTableLength;
+    }
+
+    public int getAverageVertexDegree() {
+        return averageVertexDegree;
+    }
+
+    public EstimateBounds getEstimateBounds() {
+        return estimateBounds;
     }
 
 }
