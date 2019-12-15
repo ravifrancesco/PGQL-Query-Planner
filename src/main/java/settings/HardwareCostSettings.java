@@ -4,16 +4,17 @@ import org.apache.commons.lang3.SystemUtils;
 
 /**
  * Cost of hardware operations. Can be customized through set methods
+ * Attributes are static as hardware performance is the same for the entire program
  */
 
 public class HardwareCostSettings {
 
-    private int blockSize;
-    private double sequentialBlockCost = 1;
-    private double randomBlockCost = 4;
-    private double sequentialTupleCost = 0.01;
-    private double indexTupleCost = 0.005;
-    private double cpuOperationCost = 0.0025;
+    static private int blockSize;
+    static private double sequentialBlockCost = 1;
+    static private double randomBlockCost = 4;
+    static private double sequentialTupleCost = 0.01;
+    static private double indexTupleCost = 0.005;
+    static private double cpuOperationCost = 0.0025;
 
     // constructor
     public HardwareCostSettings() {
@@ -30,27 +31,27 @@ public class HardwareCostSettings {
 
     // setters
     public void setBlockSize(int blockSize) {
-        this.blockSize = blockSize;
+        HardwareCostSettings.blockSize = blockSize;
     }
 
     public void setSequentialBlockCost(double sequentialBlockCost) {
-        this.sequentialBlockCost = sequentialBlockCost;
+        HardwareCostSettings.sequentialBlockCost = sequentialBlockCost;
     }
 
     public void setRandomBlockCost(double randomBlockCost) {
-        this.randomBlockCost = randomBlockCost;
+        HardwareCostSettings.randomBlockCost = randomBlockCost;
     }
 
     public void setSequentialTupleCost(double sequentialTupleCost) {
-        this.sequentialTupleCost = sequentialTupleCost;
+        HardwareCostSettings.sequentialTupleCost = sequentialTupleCost;
     }
 
     public void setIndexTupleCost(double indexTupleCost) {
-        this.indexTupleCost = indexTupleCost;
+        HardwareCostSettings.indexTupleCost = indexTupleCost;
     }
 
     public void setCpuOperationCost(double cpuOperationCost) {
-        this.cpuOperationCost = cpuOperationCost;
+        HardwareCostSettings.cpuOperationCost = cpuOperationCost;
     }
 
     // getters

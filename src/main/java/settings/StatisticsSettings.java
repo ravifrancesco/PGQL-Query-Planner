@@ -11,7 +11,7 @@ import graph.statistics.EstimateBounds;
 
 public class StatisticsSettings {
 
-    EstimateBounds estimateBound;
+    private EstimateBounds estimateBound;
 
     // setters
     public void setEstimateBoundToDefault() {
