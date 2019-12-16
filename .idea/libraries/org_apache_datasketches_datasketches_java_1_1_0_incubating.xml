@@ -1,6 +1,6 @@
 <component name="libraryTable">
   <library name="org.apache.datasketches:datasketches-java:1.1.0-incubating" type="repository">
-    <properties maven-id="org.apache.datasketches:datasketches-java:1.1.0-incubating" />
+    <properties maven-id="org.apache.datasketches:datasketches-java:LATEST" />
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/org/apache/datasketches/datasketches-java/1.1.0-incubating/datasketches-java-1.1.0-incubating.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/apache/datasketches/datasketches-memory/1.1.0-incubating/datasketches-memory-1.1.0-incubating.jar!/" />
