@@ -1,10 +1,15 @@
 package operators;
 
+import graph.statistics.Comparators;
 import graph.statistics.Statistics;
 import operators.utils.Constraint;
+import operators.utils.ConstraintType;
 import operators.utils.ConstraintsArrayBuilder;
 import oracle.pgql.lang.ir.QueryExpression;
 import oracle.pgql.lang.ir.QueryVertex;
+import settings.GraphSettings;
+import settings.HardwareCostSettings;
+import settings.Settings;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -26,36 +31,95 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
 
     private ArrayList<Constraint> constraintsLeft;
     private ArrayList<Constraint> constraintsRight;
-    private ArrayList<Constraint> constraintVertexToFind;
+    private ArrayList<Constraint> constraintsVertexToFind;
 
     private double operatorCost;
     private int operatorCardinality;
 
+    GraphSettings graphSettings;
+    HardwareCostSettings hardwareCostSettings;
+
     // constructor
-    public CommonNeighborMatchPlan(QueryVertex leftQueryVertex, QueryVertex rightQueryVertex, QueryVertex queryVertexToFind,
-                                   QueryPlan parentPlan1, QueryPlan parentPlan2,
+    public CommonNeighborMatchPlan(QueryVertex leftQueryVertex, QueryVertex rightQueryVertex, QueryVertex vertexToFind,
+                                   QueryPlan parentPlan1, Settings settings,
                                    Set<QueryExpression> constraintsSet, Statistics statistics) {
 
         this.parent1 = parentPlan1;
-        this.parent2 = parentPlan2;
+        if (parent1 instanceof CartesianProductPlan) {
+            this.parent2 = null;
+        } else {
+            this.parent2 = this.parent1.getParentPlan();
+        }
+
         this.leftVertex = leftQueryVertex;
         this.rightVertex = rightQueryVertex;
+        this.vertexToFind = vertexToFind;
+
+        this.graphSettings = settings.getGraphSettings();
+        this.hardwareCostSettings = settings.getHardwareCostSettings();
 
         this.constraintsLeft = constraintsVertexArrayBuilder(leftQueryVertex, constraintsSet);
         this.constraintsRight = constraintsVertexArrayBuilder(rightQueryVertex, constraintsSet);
-        this.constraintsRight = constraintsVertexArrayBuilder(queryVertexToFind, constraintsSet);
+        this.constraintsVertexToFind = constraintsVertexArrayBuilder(vertexToFind, constraintsSet);
 
-        // aggiungere costo
-
-    }
-
-    @Override
-    public void computeCardinality(Statistics statistics) {
+        this.operatorCost = computeCost(statistics);
 
     }
 
+    // computes cost of the operator
     @Override
-    public void computeCost(Statistics statistics) {
+    public double computeCost(Statistics statistics) { // ci sto ancora ragionando
+
+        double indexVertexCost = this.hardwareCostSettings.getIndexVertexCost();
+        double cpuOperationCost = this.hardwareCostSettings.getCpuOperationCost();
+        double vertexPropertyCost = this.hardwareCostSettings.getVertexPropertyCost();
+
+        int leftVertexCardinality = computeTotalVertexCardinality(this.constraintsLeft, statistics, this.parent1.getCardinality());
+        int rightVertexCardinality;
+        if (this.parent2 == null) {
+            rightVertexCardinality = computeTotalVertexCardinality(this.constraintsRight, statistics, this.parent1.getCardinality());
+        } else {
+            rightVertexCardinality = computeTotalVertexCardinality(this.constraintsRight, statistics, this.parent2.getCardinality());
+        }
+
+        double leftVertexScanCost = leftVertexCardinality * indexVertexCost;
+        double rightVertexScanCost = rightVertexCardinality * indexVertexCost;
+
+        leftVertexScanCost += leftVertexCardinality * (this.constraintsLeft.size() * (cpuOperationCost + vertexPropertyCost));
+        rightVertexScanCost += rightVertexCardinality * (this.constraintsRight.size() * (cpuOperationCost + vertexPropertyCost));
+
+        this.operatorCardinality = leftVertexCardinality * rightVertexCardinality;
+        return leftVertexScanCost + rightVertexScanCost;
+
+    }
+
+    // computes total cardinality of given vertex constraints
+    private int computeTotalVertexCardinality(ArrayList<Constraint> constraints, Statistics statistics, int totalCardinality){
+
+        double selectivity = 1;
+
+        for (Constraint constraint: constraints) {
+            selectivity *= computeConstraintSelectivity(constraint, statistics);
+        }
+
+        return (int) (totalCardinality * selectivity);
+
+    }
+
+    // computes selectivity of one vertex constraint
+    private double computeConstraintSelectivity(Constraint constraint, Statistics statistics) {
+
+        if (constraint.getType() == ConstraintType.HAS_LABEL) {
+            String vertexLabel = graphSettings.getVertexTypeCsvHeader();
+            String label = constraint.getAttribute();
+            return statistics.getVertexFilterSelectivity(vertexLabel, label, Comparators.EQUAL);
+        } else if (constraint.getType() == ConstraintType.WHERE) {
+            String attribute = constraint.getAttribute();
+            String value = constraint.getValue();
+            return statistics.getVertexFilterSelectivity(attribute, value, constraint.getConstraintComparator());
+        } else {
+            return 1; // shouldn't enter else statement
+        }
 
     }
 
@@ -81,13 +145,23 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
 
     // getters
     @Override
-    public double getCardinality() {
+    public int getCardinality() {
         return operatorCardinality;
     }
 
     @Override
     public double getOperatorCost() {
         return operatorCost;
+    }
+
+    @Override
+    public QueryPlan getParentPlan() {
+        return parent1;
+    }
+
+    @Override
+    public QueryPlan getChildPlan() {
+        return parent2;
     }
 
     // compare operators on costs
