@@ -6,6 +6,7 @@ import org.apache.datasketches.quantiles.DoublesSketch;
 import org.apache.datasketches.quantiles.DoublesSketchBuilder;
 import org.apache.datasketches.quantiles.UpdateDoublesSketch;
 import org.apache.datasketches.theta.UpdateSketch;
+import settings.Settings;
 import settings.SketchesMemorySetting;
 
 import java.io.FileOutputStream;
@@ -35,15 +36,15 @@ public class GraphColumnSketchesWrite {
 
     private CsvTypes csvType;
 
-    private SketchesMemorySetting settings;
+    private SketchesMemorySetting sketchesMemorySetting;
 
     // constructor
-    public GraphColumnSketchesWrite(ColumnDataTypes columnType, CsvTypes csvType) {
+    public GraphColumnSketchesWrite(ColumnDataTypes columnType, CsvTypes csvType, Settings settings) {
 
         this.csvType = csvType;
         this.columnType = columnType;
 
-        this.settings = new SketchesMemorySetting();
+        this.sketchesMemorySetting = settings.getSketchesMemorySetting();
 
         if (columnType == ColumnDataTypes.NUM) {
             createQuantileSketch();
@@ -142,11 +143,11 @@ public class GraphColumnSketchesWrite {
 
         // set mostFrequentItemSketch dimension, please refer to DataSKetches documentation
         if (this.csvType == CsvTypes.VERTEX) {
-            mostFrequentItemsNum = settings.getMostFrequentVertexItemsNum();
+            mostFrequentItemsNum = this.sketchesMemorySetting.getMostFrequentVertexItemsNum();
         } else if (this.csvType == CsvTypes.EDGE) {
-            mostFrequentItemsNum = settings.getMostFrequentEdgeItemsNum();
+            mostFrequentItemsNum = this.sketchesMemorySetting.getMostFrequentEdgeItemsNum();
         } else {
-            mostFrequentItemsNum = settings.getDefaultFrequentItemsNum(); // default value, shouldn't enter the else statement
+            mostFrequentItemsNum = this.sketchesMemorySetting.getDefaultFrequentItemsNum(); // default value, shouldn't enter the else statement
         }
 
         int hashMapSize = (int) pow(2, mostFrequentItemsNum);
@@ -161,11 +162,11 @@ public class GraphColumnSketchesWrite {
 
         // set quantileSketch k, please refer to DataSKetches documentation
         if (this.csvType == CsvTypes.VERTEX) {
-            quantileSketchK = settings.getQuantileSketchVertexK();
+            quantileSketchK = this.sketchesMemorySetting.getQuantileSketchVertexK();
         } else if (this.csvType == CsvTypes.EDGE) {
-            quantileSketchK = settings.getQuantileSketchEdgeK();
+            quantileSketchK = this.sketchesMemorySetting.getQuantileSketchEdgeK();
         } else {
-            quantileSketchK = settings.getQuantileSketchDefaultK(); // default value, shouldn't enter the else statement
+            quantileSketchK = this.sketchesMemorySetting.getQuantileSketchDefaultK(); // default value, shouldn't enter the else statement
         }
 
         DoublesSketchBuilder quantileSketchBuilder = DoublesSketch.builder().setK(quantileSketchK);

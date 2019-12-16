@@ -3,6 +3,7 @@ package graph.dataSketches.setup;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import settings.Settings;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -38,15 +39,23 @@ public class GraphSketchCreate {
     private HashMap<String, GraphColumnSketchesWrite> graphVertexSketches = new HashMap<>();
     private HashMap<String, GraphColumnSketchesWrite> graphEdgeSketches = new HashMap<>();
 
+    private Settings settings;
+
     // constructor
     public GraphSketchCreate(String graphName) {
         this.graphName = graphName;
     }
 
     // handles parsing, creation and save of edge and vertex csv and saves metadata to .json
-    public void graphToSketches() throws IOException {
+    public void graphToSketches(Settings settings) throws IOException {
+
+        this.settings = settings;
+
         this.vertexTableLength = csvToSketches(this.graphVertexSketches, this.vertexCsvPath, CsvTypes.VERTEX);
         this.edgeTableLength = csvToSketches(this.graphEdgeSketches, this.edgeCsvPath, CsvTypes.EDGE);
+        saveGraphSketchesToFile(graphVertexSketches);
+        saveGraphSketchesToFile(graphEdgeSketches);
+
         GraphMetadata graphMetadata = new GraphMetadata(this.graphName, this.vertexTableLength, this.edgeTableLength,
                                                         this.graphVertexSketches, this.graphEdgeSketches);
         graphMetadata.saveMetadataToJson();
@@ -113,9 +122,9 @@ public class GraphSketchCreate {
 
             try {
                 double d = Double.parseDouble(readValue);
-                graphSketches.put(header, new GraphColumnSketchesWrite(ColumnDataTypes.NUM, type));
+                graphSketches.put(header, new GraphColumnSketchesWrite(ColumnDataTypes.NUM, type, this.settings));
             } catch (NumberFormatException nfe) {
-                graphSketches.put(header, new GraphColumnSketchesWrite(ColumnDataTypes.STRING, type));
+                graphSketches.put(header, new GraphColumnSketchesWrite(ColumnDataTypes.STRING, type, this.settings));
             }
             
         }
