@@ -8,11 +8,8 @@ import graph.statistics.Statistics;
 
 public interface QueryPlan{
 
-    // compute cardinality
-    public void computeCardinality(Statistics statistics);
-
     // compute cost
-    public void computeCost(Statistics statistics);
+    public double computeCost(Statistics statistics);
 
     // SETTERS
 
@@ -28,9 +25,15 @@ public interface QueryPlan{
     // GETTERS
 
     // gets operator cardinality (used for computing operator cost)
-    public double getCardinality();
+    public int getCardinality();
 
     // gets operator
     public double getOperatorCost();
+
+    // gets parent plan
+    public QueryPlan getParentPlan();
+
+    // gets child plan
+    public QueryPlan getChildPlan();
 
 }
