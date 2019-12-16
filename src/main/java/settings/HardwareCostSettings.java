@@ -1,78 +1,90 @@
 package settings;
 
-import org.apache.commons.lang3.SystemUtils;
+import settings.utils.HardwareBenchmark;
 
 /**
  * Cost of hardware operations. Can be customized through set methods
- * Attributes are static as hardware performance is the same for the entire program
  */
 
-public class HardwareCostSettings {
+public class HardwareCostSettings extends HardwareBenchmark {
 
-    static private int blockSize;
-    static private double sequentialBlockCost = 1;
-    static private double randomBlockCost = 4;
-    static private double sequentialTupleCost = 0.01;
-    static private double indexTupleCost = 0.005;
-    static private double cpuOperationCost = 0.0025;
+    private double sequentialVertexCost;
+    private double indexVertexCost;
+    private double indexEdgeCost;
+
+    private double vertexLabelCost;
+    private double edgeLabelCost;
+
+    private double vertexPropertyCost;
+    private double edgePropertyCost;
+
+    private double cpuOperationCost;
 
     // constructor
     public HardwareCostSettings() {
-
-        if (SystemUtils.IS_OS_WINDOWS) {
-            blockSize = 4096;
-        } else if (SystemUtils.IS_OS_UNIX) {
-            blockSize = 8192;
-        } else {
-            blockSize = 8192; // shouldn't enter else statement
-        }
-
+        // da fare
     }
 
     // setters
-    public void setBlockSize(int blockSize) {
-        HardwareCostSettings.blockSize = blockSize;
+    public void setSequentialVertexCost(double sequentialVertexCost) {
+        this.sequentialVertexCost = sequentialVertexCost;
     }
 
-    public void setSequentialBlockCost(double sequentialBlockCost) {
-        HardwareCostSettings.sequentialBlockCost = sequentialBlockCost;
+    public void setIndexVertexCost(double indexVertexCost) {
+        this.indexVertexCost = indexVertexCost;
     }
 
-    public void setRandomBlockCost(double randomBlockCost) {
-        HardwareCostSettings.randomBlockCost = randomBlockCost;
+    public void setIndexEdgeCost(double indexEdgeCost) {
+        this.indexEdgeCost = indexEdgeCost;
     }
 
-    public void setSequentialTupleCost(double sequentialTupleCost) {
-        HardwareCostSettings.sequentialTupleCost = sequentialTupleCost;
+    public void setVertexLabelCost(double vertexLabelCost) {
+        this.vertexLabelCost = vertexLabelCost;
     }
 
-    public void setIndexTupleCost(double indexTupleCost) {
-        HardwareCostSettings.indexTupleCost = indexTupleCost;
+    public void setEdgeLabelCost(double edgeLabelCost) {
+        this.edgeLabelCost = edgeLabelCost;
+    }
+
+    public void setVertexPropertyCost(double vertexPropertyCost) {
+        this.vertexPropertyCost = vertexPropertyCost;
+    }
+
+    public void setEdgePropertyCost(double edgePropertyCost) {
+        this.edgePropertyCost = edgePropertyCost;
     }
 
     public void setCpuOperationCost(double cpuOperationCost) {
-        HardwareCostSettings.cpuOperationCost = cpuOperationCost;
+        this.cpuOperationCost = cpuOperationCost;
     }
 
     // getters
-    public int getBlockSize() {
-        return blockSize;
+    public double getSequentialVertexCost() {
+        return sequentialVertexCost;
     }
 
-    public double getSequentialBlockCost() {
-        return sequentialBlockCost;
+    public double getIndexVertexCost() {
+        return indexVertexCost;
     }
 
-    public double getRandomBlockCost() {
-        return randomBlockCost;
+    public double getIndexEdgeCost() {
+        return indexEdgeCost;
     }
 
-    public double getSequentialTupleCost() {
-        return sequentialTupleCost;
+    public double getVertexLabelCost() {
+        return vertexLabelCost;
     }
 
-    public double getIndexTupleCost() {
-        return indexTupleCost;
+    public double getEdgeLabelCost() {
+        return edgeLabelCost;
+    }
+
+    public double getVertexPropertyCost() {
+        return vertexPropertyCost;
+    }
+
+    public double getEdgePropertyCost() {
+        return edgePropertyCost;
     }
 
     public double getCpuOperationCost() {
@@ -80,3 +92,4 @@ public class HardwareCostSettings {
     }
 
 }
+
