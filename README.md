@@ -11,6 +11,9 @@ Cose da chiamare all'inizio del programma:
 
 Ora puoi inizire a creare i plan degli operatore (guarda i constructor dei vari operatori):
 - CartesianProduct prende un solo parent, ricava l'altro da quello (chiedi pure se hai dubbi)
+- CommonNeighbor e EdgeMatch prendono un solo parent:
+  - Se il parent è un cartesian Product riconoscono che hanno un solo parent
+  - Altrimenti automaticamente parent2 = parent1.getParent
 
 
 ## LINK UTILI
