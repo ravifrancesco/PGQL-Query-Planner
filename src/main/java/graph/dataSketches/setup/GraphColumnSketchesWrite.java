@@ -1,5 +1,7 @@
 package graph.dataSketches.setup;
 
+import exceptions.ColumnDataTypeException;
+import exceptions.UnexpectedCSVType;
 import org.apache.datasketches.ArrayOfStringsSerDe;
 import org.apache.datasketches.frequencies.ItemsSketch;
 import org.apache.datasketches.quantiles.DoublesSketch;
@@ -9,6 +11,7 @@ import org.apache.datasketches.theta.UpdateSketch;
 import settings.Settings;
 import settings.SketchesMemorySetting;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -39,7 +42,7 @@ public class GraphColumnSketchesWrite {
     private SketchesMemorySetting sketchesMemorySetting;
 
     // constructor
-    public GraphColumnSketchesWrite(ColumnDataTypes columnType, CsvTypes csvType, Settings settings) {
+    public GraphColumnSketchesWrite(ColumnDataTypes columnType, CsvTypes csvType, Settings settings) throws ColumnDataTypeException {
 
         this.csvType = csvType;
         this.columnType = columnType;
@@ -54,34 +57,39 @@ public class GraphColumnSketchesWrite {
             createMostFrequentSketch();
             this.quantileSketch = null;
         } else {
-            // aggiungere gestione altri tipi
+            throw new ColumnDataTypeException();
         }
 
     }
 
     // handles update of sketches in this object
-    public void updateColumnSketches(String readValue) {
+    public void updateColumnSketches(String readValue) throws ColumnDataTypeException {
 
         if (this.columnType == ColumnDataTypes.NUM) {
             try {
                 double newValue = Double.parseDouble(readValue);
                 this.quantileSketch.update(newValue);
             } catch (NumberFormatException nfe) {
-                //Aggiungere gestione errori
+                System.out.println("NumberFormatException: " + nfe.getMessage());
             }
         } else if (this.columnType == ColumnDataTypes.STRING){
             this.distinctCountingSketch.update(readValue);
             this.mostFrequentSketch.update(readValue);
         } else {
-            // aggiungere gestione altri tipi
+            throw new ColumnDataTypeException();
         }
 
     }
 
     // handles saving of sketches in this object to bin file in directory /graphName/columnName/
-    public void saveColumnSketchToFile(String graphName, String columnName) { //Sistemare posizione di salvataggio e nomi
+    public void saveColumnSketchToFile(String graphName, String columnName) throws ColumnDataTypeException { //Sistemare posizione di salvataggio e nomi
 
-        String columnDir = createSavingDirectoryPatch(graphName, columnName);
+        String columnDir = null;
+        try {
+            columnDir = createSavingDirectoryPatch(graphName, columnName);
+        } catch (UnexpectedCSVType unexpectedCSVType) {
+            unexpectedCSVType.printStackTrace();
+        }
 
         if (this.columnType == ColumnDataTypes.NUM) {
             saveQuantileSketchToFile(columnDir);
@@ -89,40 +97,41 @@ public class GraphColumnSketchesWrite {
             saveDistinctCountingSketchToFile(columnDir);
             saveMostFrequentSketchToFile(columnDir);
         } else {
-            // aggiungere gestione altri tipi
+            throw new ColumnDataTypeException();
         }
     }
 
     // handles saving of distinctCountingSketch to .bin file
     private void saveDistinctCountingSketchToFile(String columnDir) {
-        try {
-            FileOutputStream outQuantileSketch = new FileOutputStream(columnDir + "/QuantileSketch.bin");
+        try (FileOutputStream outQuantileSketch = new FileOutputStream(columnDir + "/QuantileSketch.bin")) {
             outQuantileSketch.write(this.quantileSketch.compact().toByteArray());
             outQuantileSketch.close();
-        } catch (IOException ioe) {
-            //Aggiungere gestione errori
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     // handles saving of mostFrequentSketch to .bin file
     private void saveMostFrequentSketchToFile(String columnDir) {
-        try {
-            FileOutputStream outMostFrequentSketch = new FileOutputStream(columnDir + "/MostFrequentSketch.bin");
+        try (FileOutputStream outMostFrequentSketch = new FileOutputStream(columnDir + "/MostFrequentSketch.bin")) {
             outMostFrequentSketch.write(this.mostFrequentSketch.toByteArray(new ArrayOfStringsSerDe()));
             outMostFrequentSketch.close();
-        } catch (IOException ioe) {
-            //Aggiungere gestione errori
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     // handles saving of quantileSketch to .bin file
     private void saveQuantileSketchToFile(String columnDir) {
-        try {
-            FileOutputStream outDistinctCountingSketch = new FileOutputStream(columnDir + "/DistinctCountingSketch.bin");
+        try (FileOutputStream outDistinctCountingSketch = new FileOutputStream(columnDir + "/DistinctCountingSketch.bin")) {
             outDistinctCountingSketch.write(this.distinctCountingSketch.compact().toByteArray());
             outDistinctCountingSketch.close();
-        } catch (IOException ioe) {
-            //Aggiungere gestione errori
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -175,7 +184,7 @@ public class GraphColumnSketchesWrite {
     }
 
     // handles creation of saving directory path
-    private String createSavingDirectoryPatch(String graphName, String columnName) {
+    private String createSavingDirectoryPatch(String graphName, String columnName) throws UnexpectedCSVType {
 
         String columnDir;
 
@@ -185,6 +194,7 @@ public class GraphColumnSketchesWrite {
             columnDir = '/' + graphName + '/' + "edge" + '/' + columnName;
         } else {
             columnDir = null; //Aggiungere gestione type sbagliato
+            throw new UnexpectedCSVType();
         }
 
         return columnDir;

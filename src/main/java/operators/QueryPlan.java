@@ -1,5 +1,6 @@
 package operators;
 
+import exceptions.ColumnDataTypeException;
 import graph.statistics.Statistics;
 
 /**
@@ -9,7 +10,7 @@ import graph.statistics.Statistics;
 public interface QueryPlan{
 
     // compute cost
-    public double computeCost(Statistics statistics);
+    public double computeCost(Statistics statistics) throws ColumnDataTypeException;
 
     // SETTERS
 

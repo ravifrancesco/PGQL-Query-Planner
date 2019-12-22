@@ -1,5 +1,6 @@
 package operators;
 
+import exceptions.ColumnDataTypeException;
 import graph.statistics.Comparators;
 import graph.statistics.Statistics;
 import operators.utils.Constraint;
@@ -13,8 +14,6 @@ import settings.Settings;
 
 import java.util.ArrayList;
 import java.util.Set;
-
-import static java.lang.Math.log;
 
 /**
  * Neighbor Match Operator
@@ -31,7 +30,8 @@ public class NeighborMatchPlan extends ConstraintsArrayBuilder implements QueryP
     private QueryPlan child;
     private QueryPlan parent;
 
-    private ArrayList<Constraint> constraints;
+    private ArrayList<Constraint> constraintsSrc;
+    private ArrayList<Constraint> constraintsDst;
 
     private double operatorCost;
     private int operatorCardinality;
@@ -52,86 +52,50 @@ public class NeighborMatchPlan extends ConstraintsArrayBuilder implements QueryP
         this.graphSettings = settings.getGraphSettings();
         this.hardwareCostSettings = settings.getHardwareCostSettings();
 
-        this.constraints = constraintsVertexArrayBuilder(dstQueryVertex, constraintsSet);
+        if (this.outgoing) {
+            this.constraintsSrc = constraintsVertexArrayBuilder(srcQueryVertex, constraintsSet);
+            this.constraintsDst = constraintsVertexArrayBuilder(dstQueryVertex, constraintsSet);
+        } else {
+            this.constraintsSrc = constraintsVertexArrayBuilder(dstQueryVertex, constraintsSet);
+            this.constraintsDst = constraintsVertexArrayBuilder(srcQueryVertex, constraintsSet);
+        }
 
-        this.operatorCost = computeCost(statistics);
+
+        try {
+            this.operatorCost = computeCost(statistics);
+        } catch (ColumnDataTypeException e) {
+            e.printStackTrace();
+        }
 
     }
 
     // computes cost of the operator
     @Override
-    public double computeCost(Statistics statistics) { // controllare se è giusto
-
-        if (this.outgoing) {
-            return computeCostOutgoing(statistics);
-        } else {
-            return computeCostIngoing(statistics);
-        }
-
-    }
-
-    // computes cost if boolean outgoing is true
-    private double computeCostOutgoing(Statistics statistics) {
-
-        double searchCost;
-        double dstVertexSelectivity;
-        double filterCost;
-        int noFilterCardinality;
+    public double computeCost(Statistics statistics) throws ColumnDataTypeException { // da rivedere
 
         double indexVertexCost = this.hardwareCostSettings.getIndexVertexCost();
         double cpuOperationCost = this.hardwareCostSettings.getCpuOperationCost();
         double vertexPropertyCost = this.hardwareCostSettings.getVertexPropertyCost();
 
-        int srcVertexCardinality = parent.getCardinality();
+        int srcVertexCardinality;
+        int dstVertexCardinality = computeTotalVertexCardinality(this.constraintsDst, statistics, statistics.getVertexTableLength());
+        dstVertexCardinality *= statistics.getAverageVertexDegree();
 
-        dstVertexSelectivity = computeTotalVertexSelectivity(this.constraints, statistics);
-        noFilterCardinality = statistics.getAverageVertexDegree() * srcVertexCardinality;
+        srcVertexCardinality = computeTotalVertexCardinality(this.constraintsSrc, statistics, parent.getCardinality());
 
-        searchCost = statistics.getAverageVertexDegree() * cpuOperationCost;
-        searchCost *= srcVertexCardinality;
+        double srcVertexScanCost = srcVertexCardinality * indexVertexCost;
+        double dstVertexScanCost = dstVertexCardinality * indexVertexCost;
 
-        filterCost = this.constraints.size() * (cpuOperationCost + vertexPropertyCost);
-        filterCost += indexVertexCost;
-        filterCost *= noFilterCardinality;
+        srcVertexScanCost += srcVertexCardinality * (this.constraintsSrc.size() * (cpuOperationCost + vertexPropertyCost));
+        dstVertexScanCost += dstVertexCardinality * (this.constraintsDst.size() * (cpuOperationCost + vertexPropertyCost));
 
-        this.operatorCardinality = (int) (noFilterCardinality * dstVertexSelectivity);
-
-        return filterCost + searchCost;
-
-    }
-
-    // computes cost if outgoing is false
-    private double computeCostIngoing(Statistics statistics) {
-
-        double binarySearchCost;
-        double dstVertexSelectivity;
-        double filterCost;
-        int noFilterCardinality;
-
-        double indexVertexCost = this.hardwareCostSettings.getIndexVertexCost();
-        double cpuOperationCost = this.hardwareCostSettings.getCpuOperationCost();
-        double vertexPropertyCost = this.hardwareCostSettings.getVertexPropertyCost();
-
-        int srcVertexCardinality = parent.getCardinality();
-
-        dstVertexSelectivity = computeTotalVertexSelectivity(this.constraints, statistics);
-        noFilterCardinality = statistics.getAverageVertexDegree() * statistics.getAverageVertexDegree();
-
-        binarySearchCost = (log(statistics.getAverageVertexDegree()) * srcVertexCardinality) * statistics.getVertexTableLength();
-        binarySearchCost *= cpuOperationCost;
-
-        filterCost = this.constraints.size() * (cpuOperationCost + vertexPropertyCost);
-        filterCost += indexVertexCost;
-        filterCost *= noFilterCardinality;
-
-        this.operatorCardinality = (int) (noFilterCardinality * dstVertexSelectivity);
-
-        return filterCost + binarySearchCost;
+        this.operatorCardinality = dstVertexCardinality;
+        return srcVertexScanCost + dstVertexScanCost;
 
     }
 
-    // computes total selectivity of given vertex constraints
-    private double computeTotalVertexSelectivity(ArrayList<Constraint> constraints, Statistics statistics){
+    // computes total cardinality of given vertex constraints
+    private int computeTotalVertexCardinality(ArrayList<Constraint> constraints, Statistics statistics, int totalCardinality) throws ColumnDataTypeException {
 
         double selectivity = 1;
 
@@ -139,12 +103,12 @@ public class NeighborMatchPlan extends ConstraintsArrayBuilder implements QueryP
             selectivity *= computeConstraintSelectivity(constraint, statistics);
         }
 
-        return selectivity;
+        return (int) (totalCardinality * selectivity);
 
     }
 
     // computes selectivity of one vertex constraint
-    private double computeConstraintSelectivity(Constraint constraint, Statistics statistics) {
+    private double computeConstraintSelectivity(Constraint constraint, Statistics statistics) throws ColumnDataTypeException {
 
         if (constraint.getType() == ConstraintType.HAS_LABEL) {
             String vertexLabel = graphSettings.getVertexTypeCsvHeader();

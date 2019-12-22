@@ -1,5 +1,6 @@
 package graph.statistics;
 
+import exceptions.ColumnDataTypeException;
 import graph.dataSketches.load.GraphColumnSketchesRead;
 import graph.dataSketches.setup.ColumnDataTypes;
 
@@ -47,7 +48,7 @@ public class Statistics extends RetrieveStatistics {
     }
 
     // get vertex statistics (value column indicates the column on which filterValue selectivity is computed)
-    public double getVertexFilterSelectivity(String valueColumn, String filterValue, Comparators comparator) { //gestire non trovato e tipo sbagliato
+    public double getVertexFilterSelectivity(String valueColumn, String filterValue, Comparators comparator) throws ColumnDataTypeException { //gestire non trovato e tipo sbagliato
 
         GraphColumnSketchesRead sketchesToRead = vertexSketchesMap.get(valueColumn);
 
@@ -56,18 +57,19 @@ public class Statistics extends RetrieveStatistics {
                 double d = Double.parseDouble(filterValue);
                 return getNumSelectivity(d, comparator, sketchesToRead);
             } catch (NumberFormatException nfe) {
-                return 0; // gestire tipo sbagliato
+                System.out.println("NumberFormatException: " + nfe.getMessage());
+                return -1;
             }
         } else if (sketchesToRead.getColumnType() == ColumnDataTypes.STRING) {
             return getStringSelectivity(filterValue, this.estimateBounds, this.vertexTableLength, sketchesToRead);
         } else {
-            return 0; // gestire nessuno dei due casi
+            throw new ColumnDataTypeException();
         }
 
     }
 
     // get edge statistics (value column indicates the column on which filterValue selectivity is computed)
-    public double getEdgeFilterSelectivity(String valueColumn, String filterValue, Comparators comparator) { //gestire non trovato e tipo sbagliato
+    public double getEdgeFilterSelectivity(String valueColumn, String filterValue, Comparators comparator) throws ColumnDataTypeException { //gestire non trovato e tipo sbagliato
 
         GraphColumnSketchesRead sketchesToRead = edgeSketchesMap.get(valueColumn);
 
@@ -76,12 +78,13 @@ public class Statistics extends RetrieveStatistics {
                 double d = Double.parseDouble(filterValue);
                 return getNumSelectivity(d, comparator, sketchesToRead);
             } catch (NumberFormatException nfe) {
-                return 0; // gestire tipo sbagliato
+                System.out.println("NumberFormatException: " + nfe.getMessage());
+                return -1;
             }
         } else if (sketchesToRead.getColumnType() == ColumnDataTypes.STRING) {
             return getStringSelectivity(filterValue, this.estimateBounds, this.edgeTableLength, sketchesToRead);
         } else {
-            return 0; // gestire nessuno dei due casi
+            throw new ColumnDataTypeException();
         }
 
     }

@@ -1,5 +1,7 @@
 package operators;
 
+import exceptions.ColumnDataTypeException;
+import graph.statistics.Comparators;
 import graph.statistics.Statistics;
 import oracle.pgql.lang.ir.QueryVertex;
 import settings.GraphSettings;
@@ -45,11 +47,17 @@ public class CartesianProductPlan implements QueryPlan, Comparable<QueryPlan> {
 
         this.operatorCost = computeCost(statistics);
 
+        try {
+            this.operatorCost = computeCost(statistics);
+        } catch (ColumnDataTypeException e) {
+            e.printStackTrace();
+        }
+
     }
 
     // computes cost of the operator
     @Override
-    public double computeCost(Statistics statistics) { // controllare se è giusto
+    public double computeCost(Statistics statistics) throws ColumnDataTypeException { // da rivedere
 
         double cpuOperationCost = this.hardwareCostSettings.getCpuOperationCost();
 

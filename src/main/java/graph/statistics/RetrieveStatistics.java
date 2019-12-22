@@ -1,5 +1,6 @@
 package graph.statistics;
 
+import exceptions.SketchBoundException;
 import graph.dataSketches.load.GraphColumnSketchesRead;
 import org.apache.datasketches.frequencies.ItemsSketch;
 import org.apache.datasketches.quantiles.DoublesSketch;
@@ -19,7 +20,12 @@ public class RetrieveStatistics {
         ItemsSketch<String> mostFrequentSketch = sketchesToRead.getMostFrequentSketch();
         Sketch distinctCountSketch = sketchesToRead.getDistinctCountingSketch();
 
-        double estimatedCardinality = searchInMostFrequent(valueToFind, mostFrequentSketch, estimateBounds);
+        double estimatedCardinality = 0;
+        try {
+            estimatedCardinality = searchInMostFrequent(valueToFind, mostFrequentSketch, estimateBounds);
+        } catch (SketchBoundException e) {
+            e.printStackTrace();
+        }
 
         if (estimatedCardinality > 0) {
             return estimatedCardinality / tableLength;
@@ -58,7 +64,7 @@ public class RetrieveStatistics {
 
     // get columnMostFrequent and check if value is contained, otherwise return 0
     private double searchInMostFrequent(String valueToFind, ItemsSketch<String> mostFrequentSketch,
-                                      EstimateBounds estimateBounds) {
+                                      EstimateBounds estimateBounds) throws SketchBoundException {
 
         if (estimateBounds == EstimateBounds.ESTIMATE) {
             return mostFrequentSketch.getEstimate(valueToFind);
@@ -66,8 +72,9 @@ public class RetrieveStatistics {
             return mostFrequentSketch.getLowerBound(valueToFind);
         } else if (estimateBounds == EstimateBounds.UPPERBOUND) {
             return mostFrequentSketch.getUpperBound(valueToFind);
+        } else {
+            throw new SketchBoundException();
         }
-        return 0; // non dovrebbe succedere, gestire errori
 
     }
 

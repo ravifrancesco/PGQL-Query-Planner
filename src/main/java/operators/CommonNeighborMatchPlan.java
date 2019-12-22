@@ -1,5 +1,6 @@
 package operators;
 
+import exceptions.ColumnDataTypeException;
 import graph.statistics.Comparators;
 import graph.statistics.Statistics;
 import operators.utils.Constraint;
@@ -14,8 +15,6 @@ import settings.Settings;
 import java.util.ArrayList;
 import java.util.Set;
 
-import static java.lang.Math.*;
-
 /**
  * Common Neighbor Match Operator
  * Used for matching a common neighbor of two already matched vertices.
@@ -27,12 +26,12 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
     private QueryVertex rightVertex;
     private QueryVertex vertexToFind;
 
-    boolean leftOutgoing;
-    boolean rightOutgoing;
-
     private QueryPlan child;
-    private QueryPlan parent;
+    private QueryPlan parent1;
+    private QueryPlan parent2;
 
+    private ArrayList<Constraint> constraintsLeft;
+    private ArrayList<Constraint> constraintsRight;
     private ArrayList<Constraint> constraintsVertexToFind;
 
     private double operatorCost;
@@ -43,122 +42,64 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
 
     // constructor
     public CommonNeighborMatchPlan(QueryVertex leftQueryVertex, QueryVertex rightQueryVertex, QueryVertex vertexToFind,
-                                   boolean leftOutgoing, boolean rightOutgoing,
                                    QueryPlan parentPlan1, Settings settings,
                                    Set<QueryExpression> constraintsSet, Statistics statistics) {
 
-        this.parent = parentPlan1;
-        if (parent instanceof CartesianProductPlan) {
-            // è giusto
+        this.parent1 = parentPlan1;
+        if (parent1 instanceof CartesianProductPlan) {
+            this.parent2 = null;
         } else {
-            // altrimenti non ha senso (?)
+            this.parent2 = this.parent1.getParentPlan();
         }
 
         this.leftVertex = leftQueryVertex;
         this.rightVertex = rightQueryVertex;
         this.vertexToFind = vertexToFind;
 
-        this.leftOutgoing = leftOutgoing;
-        this.rightOutgoing = rightOutgoing;
-
         this.graphSettings = settings.getGraphSettings();
         this.hardwareCostSettings = settings.getHardwareCostSettings();
 
+        this.constraintsLeft = constraintsVertexArrayBuilder(leftQueryVertex, constraintsSet);
+        this.constraintsRight = constraintsVertexArrayBuilder(rightQueryVertex, constraintsSet);
         this.constraintsVertexToFind = constraintsVertexArrayBuilder(vertexToFind, constraintsSet);
 
-        this.operatorCost = computeCost(statistics);
+        try {
+            this.operatorCost = computeCost(statistics);
+        } catch (ColumnDataTypeException e) {
+            e.printStackTrace();
+        }
 
     }
 
     // computes cost of the operator
     @Override
-    public double computeCost(Statistics statistics) {
+    public double computeCost(Statistics statistics) throws ColumnDataTypeException { // ci sto ancora ragionando
 
-        /*
-        Da implementare per i due outgoing
-        if (this.leftOutgoing && this.rightOutgoing) {
-            return computeCostBothOutgoing(statistics);
-        } else if (this.leftOutgoing && !this.rightOutgoing) {
+        double indexVertexCost = this.hardwareCostSettings.getIndexVertexCost();
+        double cpuOperationCost = this.hardwareCostSettings.getCpuOperationCost();
+        double vertexPropertyCost = this.hardwareCostSettings.getVertexPropertyCost();
 
-        } else if (!this.leftOutgoing && this.rightOutgoing) {
-
+        int leftVertexCardinality = computeTotalVertexCardinality(this.constraintsLeft, statistics, this.parent1.getCardinality());
+        int rightVertexCardinality;
+        if (this.parent2 == null) {
+            rightVertexCardinality = computeTotalVertexCardinality(this.constraintsRight, statistics, this.parent1.getCardinality());
         } else {
-
+            rightVertexCardinality = computeTotalVertexCardinality(this.constraintsRight, statistics, this.parent2.getCardinality());
         }
-         */
 
-        return computeCostBothOutgoing(statistics);
+        double leftVertexScanCost = leftVertexCardinality * indexVertexCost;
+        double rightVertexScanCost = rightVertexCardinality * indexVertexCost;
 
-    }
+        leftVertexScanCost += leftVertexCardinality * (this.constraintsLeft.size() * (cpuOperationCost + vertexPropertyCost));
+        rightVertexScanCost += rightVertexCardinality * (this.constraintsRight.size() * (cpuOperationCost + vertexPropertyCost));
 
-    // computes cost if leftOutgoing and rightOutgoing are both true ( a -> b <- c )
-    private double computeCostBothOutgoing(Statistics statistics) {
-
-        double neighborSearchCost;
-        double binarySearchCost;
-        double dstVertexSelectivity;
-        double filterCost;
-        int noFilterCardinality;
-
-        double indexVertexCost = this.hardwareCostSettings.getIndexVertexCost();
-        double cpuOperationCost = this.hardwareCostSettings.getCpuOperationCost();
-        double vertexPropertyCost = this.hardwareCostSettings.getVertexPropertyCost();
-
-        int vertexCardinality = parent.getCardinality();
-
-        dstVertexSelectivity = computeTotalVertexSelectivity(this.constraintsVertexToFind, statistics);
-        noFilterCardinality = (int) (1/(pow(2, statistics.getAverageVertexDegree())) * vertexCardinality);
-
-        neighborSearchCost = (statistics.getAverageVertexDegree() * cpuOperationCost) * 2;
-        neighborSearchCost *= vertexCardinality;
-        binarySearchCost = (log(statistics.getAverageVertexDegree()) * statistics.getAverageVertexDegree()) * vertexCardinality;
-        binarySearchCost *= cpuOperationCost;
-
-        filterCost = this.constraintsVertexToFind.size() * (cpuOperationCost + vertexPropertyCost);
-        filterCost += indexVertexCost;
-        filterCost *= noFilterCardinality;
-
-        this.operatorCardinality = (int) (noFilterCardinality * dstVertexSelectivity);
-
-        return neighborSearchCost + binarySearchCost + filterCost;
-
-    }
-
-    // computes cost if leftOutgoing is true and rightOutgoing is false ( a -> b -> c ) (DA IMPLEMENTARE)
-    private double computeCostLeftOutgoing(Statistics statistics) {
-
-        double neighborSearchCost;
-        double binarySearchCost;
-        double dstVertexSelectivity;
-        double filterCost;
-        int noFilterCardinality;
-
-        double indexVertexCost = this.hardwareCostSettings.getIndexVertexCost();
-        double cpuOperationCost = this.hardwareCostSettings.getCpuOperationCost();
-        double vertexPropertyCost = this.hardwareCostSettings.getVertexPropertyCost();
-
-        int vertexCardinality = parent.getCardinality();
-
-        dstVertexSelectivity = computeTotalVertexSelectivity(this.constraintsVertexToFind, statistics);
-        noFilterCardinality = (int) (1/(pow(2, statistics.getAverageVertexDegree())) * vertexCardinality);
-
-        neighborSearchCost = (statistics.getAverageVertexDegree() * cpuOperationCost) * 2;
-        neighborSearchCost *= vertexCardinality;
-        binarySearchCost = (log(statistics.getAverageVertexDegree()) * statistics.getAverageVertexDegree()) * vertexCardinality;
-        binarySearchCost *= cpuOperationCost;
-
-        filterCost = this.constraintsVertexToFind.size() * (cpuOperationCost + vertexPropertyCost);
-        filterCost += indexVertexCost;
-        filterCost *= noFilterCardinality;
-
-        this.operatorCardinality = (int) (noFilterCardinality * dstVertexSelectivity);
-
-        return neighborSearchCost + binarySearchCost + filterCost;
+        this.operatorCardinality = leftVertexCardinality * rightVertexCardinality;
+        return leftVertexScanCost + rightVertexScanCost;
 
     }
 
     // computes total cardinality of given vertex constraints
-    private double computeTotalVertexSelectivity(ArrayList<Constraint> constraints, Statistics statistics) {
+    private int computeTotalVertexCardinality(ArrayList<Constraint> constraints, Statistics statistics, int totalCardinality) throws ColumnDataTypeException {
 
         double selectivity = 1;
 
@@ -166,12 +107,12 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
             selectivity *= computeConstraintSelectivity(constraint, statistics);
         }
 
-        return selectivity;
+        return (int) (totalCardinality * selectivity);
 
     }
 
     // computes selectivity of one vertex constraint
-    private double computeConstraintSelectivity(Constraint constraint, Statistics statistics) {
+    private double computeConstraintSelectivity(Constraint constraint, Statistics statistics) throws ColumnDataTypeException {
 
         if (constraint.getType() == ConstraintType.HAS_LABEL) {
             String vertexLabel = graphSettings.getVertexTypeCsvHeader();
@@ -195,7 +136,11 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
 
     @Override
     public void setParentPlan(QueryPlan parentPlan) {
-        this.parent = parentPlan;
+        this.parent1 = parentPlan;
+    }
+
+    public void setParent2(QueryPlan parent2) {
+        this.parent2 = parent2; // sets second parent operator for cartesian product
     }
 
     @Override
@@ -216,12 +161,12 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
 
     @Override
     public QueryPlan getParentPlan() {
-        return parent;
+        return parent1;
     }
 
     @Override
     public QueryPlan getChildPlan() {
-        return child;
+        return parent2;
     }
 
     // compare operators on costs

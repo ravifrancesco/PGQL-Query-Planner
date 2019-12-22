@@ -43,7 +43,13 @@ public class Main {
         graph.addNode(nodeF);
         graph.addNode(nodeZ);
 
+        long startTime = System.nanoTime();
         graph = Dijkstra.calculateShortestPathFromSource(graph, nodeA);
+        long endTime = System.nanoTime();
+
+        long duration = (endTime - startTime);
+
+        System.out.println(duration+" ns");
 
         LinkedList<Node> path = new LinkedList<>(nodeZ.getShortestPath());
 

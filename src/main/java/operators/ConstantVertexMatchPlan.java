@@ -1,5 +1,6 @@
 package operators;
 
+import exceptions.ColumnDataTypeException;
 import graph.statistics.Comparators;
 import graph.statistics.Statistics;
 import operators.utils.Constraint;
@@ -52,9 +53,7 @@ public class ConstantVertexMatchPlan extends ConstraintsArrayBuilder implements 
     }
 
     @Override
-    public double computeCost(Statistics statistics) { // controllare se è giusto
-
-        double srcVertexScanCost;
+    public double computeCost(Statistics statistics) { // da rivedere
 
         double sequentialVertexCost = this.hardwareCostSettings.getSequentialVertexCost();
         double cpuOperationCost = this.hardwareCostSettings.getCpuOperationCost();
@@ -62,18 +61,21 @@ public class ConstantVertexMatchPlan extends ConstraintsArrayBuilder implements 
 
         int queryVertexCardinality = statistics.getVertexTableLength();
 
-        this.operatorCardinality = computeTotalVertexCardinality(statistics, queryVertexCardinality);
+        double srcVertexScanCost = queryVertexCardinality * sequentialVertexCost;
+        srcVertexScanCost += queryVertexCardinality * (this.constraints.size() * (cpuOperationCost + vertexPropertyCost));
 
-        srcVertexScanCost = sequentialVertexCost;
-        srcVertexScanCost += this.constraints.size() * (cpuOperationCost + vertexPropertyCost);
-        srcVertexScanCost *= queryVertexCardinality;
-
+        try {
+            this.operatorCardinality = computeTotalVertexCardinality(statistics, statistics.getVertexTableLength());
+        } catch (ColumnDataTypeException e) {
+            e.printStackTrace();
+        }
+        ;
         return srcVertexScanCost;
 
     }
 
     // computes total cardinality of given vertex constraints
-    private int computeTotalVertexCardinality(Statistics statistics, int totalCardinality){
+    private int computeTotalVertexCardinality(Statistics statistics, int totalCardinality) throws ColumnDataTypeException {
 
         double selectivity = 1;
 
@@ -86,7 +88,7 @@ public class ConstantVertexMatchPlan extends ConstraintsArrayBuilder implements 
     }
 
     // computes selectivity of one vertex constraint
-    private double computeConstraintSelectivity(Constraint constraint, Statistics statistics) {
+    private double computeConstraintSelectivity(Constraint constraint, Statistics statistics) throws ColumnDataTypeException {
 
         if (constraint.getType() == ConstraintType.HAS_LABEL) {
             String vertexLabel = graphSettings.getVertexTypeCsvHeader();

@@ -1,5 +1,6 @@
 package operators;
 
+import exceptions.ColumnDataTypeException;
 import graph.statistics.Comparators;
 import graph.statistics.Statistics;
 import operators.utils.Constraint;
@@ -47,14 +48,16 @@ public class RootVertexMatchPlan extends ConstraintsArrayBuilder implements Quer
 
         this.constraints = constraintsVertexArrayBuilder(queryVertex, constraintsSet);
 
-        this.operatorCost = computeCost(statistics);
+        try {
+            this.operatorCost = computeCost(statistics);
+        } catch (ColumnDataTypeException e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Override
-    public double computeCost(Statistics statistics) { // controllare se  è giusto
-
-        double srcVertexScanCost;
+    public double computeCost(Statistics statistics) throws ColumnDataTypeException { // da rivedere
 
         double sequentialVertexCost = this.hardwareCostSettings.getSequentialVertexCost();
         double cpuOperationCost = this.hardwareCostSettings.getCpuOperationCost();
@@ -62,18 +65,16 @@ public class RootVertexMatchPlan extends ConstraintsArrayBuilder implements Quer
 
         int queryVertexCardinality = statistics.getVertexTableLength();
 
-        this.operatorCardinality = computeTotalVertexCardinality(statistics, queryVertexCardinality);
+        double srcVertexScanCost = queryVertexCardinality * sequentialVertexCost;
+        srcVertexScanCost += queryVertexCardinality * (this.constraints.size() * (cpuOperationCost + vertexPropertyCost));
 
-        srcVertexScanCost = sequentialVertexCost;
-        srcVertexScanCost += this.constraints.size() * (cpuOperationCost + vertexPropertyCost);
-        srcVertexScanCost *= queryVertexCardinality;
-
+        this.operatorCardinality = computeTotalVertexCardinality(statistics, statistics.getVertexTableLength());;
         return srcVertexScanCost;
 
     }
 
     // computes total cardinality of given vertex constraints
-    private int computeTotalVertexCardinality(Statistics statistics, int totalCardinality){
+    private int computeTotalVertexCardinality(Statistics statistics, int totalCardinality) throws ColumnDataTypeException {
 
         double selectivity = 1;
 
@@ -86,7 +87,7 @@ public class RootVertexMatchPlan extends ConstraintsArrayBuilder implements Quer
     }
 
     // computes selectivity of one vertex constraint
-    private double computeConstraintSelectivity(Constraint constraint, Statistics statistics) {
+    private double computeConstraintSelectivity(Constraint constraint, Statistics statistics) throws ColumnDataTypeException {
 
         if (constraint.getType() == ConstraintType.HAS_LABEL) {
             String vertexLabel = graphSettings.getVertexTypeCsvHeader();
