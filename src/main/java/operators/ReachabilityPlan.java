@@ -2,7 +2,6 @@ package operators;
 
 import graph.statistics.Statistics;
 import settings.HardwareCostSettings;
-import oracle.pgql.lang.ir.*;
 
 /**
  * Reachability Operator
@@ -24,14 +23,9 @@ public class ReachabilityPlan implements QueryPlan, Comparable<QueryPlan> {
     // constructor
     // da fare
 
-    //@Override
-    public void computeCardinality(Statistics statistics) {
-
-    }
-
     @Override
-    //da fare
     public double computeCost(Statistics statistics) {
+        // da implementare
         return 0;
     }
 
@@ -54,7 +48,7 @@ public class ReachabilityPlan implements QueryPlan, Comparable<QueryPlan> {
     // getters
     @Override
     public int getCardinality() {
-        return this.operatorCardinality;
+        return operatorCardinality;
     }
 
     @Override
@@ -63,10 +57,14 @@ public class ReachabilityPlan implements QueryPlan, Comparable<QueryPlan> {
     }
 
     @Override
-    public QueryPlan getParentPlan() { return null; }
+    public QueryPlan getParentPlan() {
+        return parent;
+    }
 
     @Override
-    public QueryPlan getChildPlan() { return null;}
+    public QueryPlan getChildPlan() {
+        return child;
+    }
 
     // compare operators on costs
     @Override

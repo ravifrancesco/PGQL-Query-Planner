@@ -15,6 +15,8 @@ import settings.Settings;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static java.lang.Math.log;
+
 /**
  * Edge Match Operator
  * Used for matching an edge between already two matched vertices.
@@ -22,14 +24,13 @@ import java.util.Set;
 
 public class EdgeMatchPlan extends ConstraintsArrayBuilder implements QueryPlan, Comparable<QueryPlan>{
 
-    private QueryVertex leftVertex;
-    private QueryVertex rightVertex;
+    private QueryVertex srcVertex;
+    private QueryVertex dstVertex;
 
     private QueryEdge edgeToFind;
 
     private QueryPlan child;
-    private QueryPlan parent1;
-    private QueryPlan parent2;
+    private QueryPlan parent;
 
     private ArrayList<Constraint> constraintEdgeToFind;
 
@@ -40,19 +41,19 @@ public class EdgeMatchPlan extends ConstraintsArrayBuilder implements QueryPlan,
     HardwareCostSettings hardwareCostSettings;
 
     // constructor
-    public EdgeMatchPlan(QueryVertex leftQueryVertex, QueryVertex rightQueryVertex, QueryEdge edgeToFind,
-                                   QueryPlan parentPlan1, Settings settings,
-                                   Set<QueryExpression> constraintsSet, Statistics statistics) {
+    public EdgeMatchPlan(QueryVertex srcQueryVertex, QueryVertex dstQueryVertex, QueryEdge edgeToFind,
+                         QueryPlan parentPlan, Settings settings,
+                         Set<QueryExpression> constraintsSet, Statistics statistics) {
 
-        this.parent1 = parentPlan1;
-        if (parent1 instanceof CartesianProductPlan) {
-            this.parent2 = null;
+        this.parent = parentPlan;
+        if (parent instanceof CartesianProductPlan) {
+            // è giusto
         } else {
-            this.parent2 = this.parent1.getParentPlan();
+            // altrimenti non ha senso (?)
         }
 
-        this.leftVertex = leftQueryVertex;
-        this.rightVertex = rightQueryVertex;
+        this.srcVertex = srcQueryVertex;
+        this.dstVertex = dstQueryVertex;
 
         this.edgeToFind = edgeToFind;
 
@@ -67,27 +68,40 @@ public class EdgeMatchPlan extends ConstraintsArrayBuilder implements QueryPlan,
 
     // computes cost of the operator
     @Override
-    public double computeCost(Statistics statistics) { // da rivedere
+    public double computeCost(Statistics statistics) { // controllare se è giusto
+
+        double binarySearchCost;
+        double filterCost;
+        double totalEdgeSelectivity;
+        double dstSelectivity;
+        int noFilterCardinality;
 
         double indexEdgeCost = this.hardwareCostSettings.getIndexEdgeCost();
         double cpuOperationCost = this.hardwareCostSettings.getCpuOperationCost();
-        double vertexPropertyCost = this.hardwareCostSettings.getVertexPropertyCost();
+        double edgePropertyCost = this.hardwareCostSettings.getEdgePropertyCost();
 
-        int leftVertexCardinality = parent1.getCardinality();
-        int rightVertexCardinality;
-        if (parent2 == null) {
-            rightVertexCardinality = parent1.getCardinality();
-        } else {
-            rightVertexCardinality = parent2.getCardinality();
-        }
+        totalEdgeSelectivity = computeTotalEdgeSelectivity(this.constraintEdgeToFind, statistics);
 
-        // aggiungere cost binary search
-        return 1;
+        int vertexCardinality = parent.getCardinality();
+
+        dstSelectivity = statistics.getAverageVertexDegree() / (double) statistics.getVertexTableLength();
+        noFilterCardinality = (int) (dstSelectivity * statistics.getAverageVertexDegree() * vertexCardinality);
+
+        binarySearchCost = log(statistics.getAverageVertexDegree()) * vertexCardinality;
+        binarySearchCost *= cpuOperationCost;
+
+        filterCost = this.constraintEdgeToFind.size() * (cpuOperationCost + edgePropertyCost);
+        filterCost += indexEdgeCost;
+        filterCost *= noFilterCardinality;
+
+        this.operatorCardinality = (int) (noFilterCardinality * totalEdgeSelectivity);
+
+        return filterCost + binarySearchCost;
 
     }
 
-    // computes total cardinality of given vertex constraints
-    private int computeTotalVertexCardinality(ArrayList<Constraint> constraints, Statistics statistics, int totalCardinality){
+    // computes total selectivity of given edge constraints
+    private double computeTotalEdgeSelectivity(ArrayList<Constraint> constraints, Statistics statistics) {
 
         double selectivity = 1;
 
@@ -95,11 +109,11 @@ public class EdgeMatchPlan extends ConstraintsArrayBuilder implements QueryPlan,
             selectivity *= computeConstraintSelectivity(constraint, statistics);
         }
 
-        return (int) (totalCardinality * selectivity);
+        return selectivity;
 
     }
 
-    // computes selectivity of one vertex constraint
+    // computes selectivity of one edge constraint
     private double computeConstraintSelectivity(Constraint constraint, Statistics statistics) {
 
         if (constraint.getType() == ConstraintType.HAS_LABEL) {
@@ -124,11 +138,7 @@ public class EdgeMatchPlan extends ConstraintsArrayBuilder implements QueryPlan,
 
     @Override
     public void setParentPlan(QueryPlan parentPlan) {
-        this.parent1 = parentPlan;
-    }
-
-    public void setParent2(QueryPlan parent2) {
-        this.parent2 = parent2;
+        this.parent = parentPlan;
     }
 
     @Override
@@ -150,10 +160,6 @@ public class EdgeMatchPlan extends ConstraintsArrayBuilder implements QueryPlan,
     @Override
     public QueryPlan getParentPlan() {
         return null;
-    }
-
-    public QueryPlan getParent2() {
-        return parent2;
     }
 
     @Override
