@@ -1,5 +1,7 @@
 package heuristic;
 
+import operators.EdgeMatchPlan;
+import operators.QueryPlan;
 import oracle.pgql.lang.ir.GraphPattern;
 import oracle.pgql.lang.ir.GraphQuery;
 import oracle.pgql.lang.ir.QueryExpression;
@@ -7,13 +9,16 @@ import oracle.pgql.lang.ir.QueryExpression;
 import java.util.Set;
 
 public class HeuristicPlanner {
-    private String query;
+    private GraphQuery query;
 
-    public HeuristicPlanner(String query){
+    public HeuristicPlanner(GraphQuery query){
         this.query = query;
     }
 
-    public static void generatePlan(GraphQuery query) {
+    /*
+    Generates the execution plan given a GraphQuery argument
+     */
+    public static QueryPlan generatePlan(GraphQuery query) {
 
         GraphPattern gPattern = query.getGraphPattern();
         Set<QueryExpression> constraints = gPattern.getConstraints();
@@ -22,6 +27,7 @@ public class HeuristicPlanner {
         int rootVertices = 0;
         int constantVertices = 0;
 
+        //checks how many root vertices and constant vertices we have in the query
         for(QueryExpression expr : expArr){
             String expType = expr.getExpType().toString();
             if(expType.equals("FUNCTION_CALL")){
@@ -30,7 +36,7 @@ public class HeuristicPlanner {
                 constantVertices++;
             }
         }
-        System.out.println(expArr[0].getExpType().toString());
+        //System.out.println(expArr[0].getExpType().toString());
 
         /*
 
@@ -56,6 +62,8 @@ public class HeuristicPlanner {
         run Dijktra on plan to find the shortest path
 
          */
+
+        return null;
 
     }
 }
