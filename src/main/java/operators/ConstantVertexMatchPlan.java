@@ -55,21 +55,23 @@ public class ConstantVertexMatchPlan extends ConstraintsArrayBuilder implements 
     @Override
     public double computeCost(Statistics statistics) { // da rivedere
 
+        double srcVertexScanCost;
         double sequentialVertexCost = this.hardwareCostSettings.getSequentialVertexCost();
         double cpuOperationCost = this.hardwareCostSettings.getCpuOperationCost();
         double vertexPropertyCost = this.hardwareCostSettings.getVertexPropertyCost();
 
         int queryVertexCardinality = statistics.getVertexTableLength();
 
-        double srcVertexScanCost = queryVertexCardinality * sequentialVertexCost;
-        srcVertexScanCost += queryVertexCardinality * (this.constraints.size() * (cpuOperationCost + vertexPropertyCost));
-
         try {
-            this.operatorCardinality = computeTotalVertexCardinality(statistics, statistics.getVertexTableLength());
+            this.operatorCardinality = computeTotalVertexCardinality(statistics, queryVertexCardinality);
         } catch (ColumnDataTypeException e) {
             e.printStackTrace();
         }
-        ;
+
+        srcVertexScanCost = sequentialVertexCost;
+        srcVertexScanCost += this.constraints.size() * (cpuOperationCost + vertexPropertyCost);
+        srcVertexScanCost *= queryVertexCardinality;
+
         return srcVertexScanCost;
 
     }

@@ -40,12 +40,18 @@ public class HeuristicPlanner {
 
         /*
 
-        if constantVertices >= 1
-            plan <-- findOptimalConstVertexOrder()
-        else
-            plan <-- findMaxRootVertexSel()
+        function generatePlan(GraphQuery query)
+            constantVertices <-- number of constant vertices in query graph
+            rootVertices <-- number of root vertices in query graph
 
-        subPlan(plan.lastVert, verticesLeft)
+            if constantVertices is greater than or equal to 1
+                plan <-- findOptimalConstVertexOrder()
+            else
+                plan <-- findMaxRootVertexSel()
+
+            subPlan(plan.lastVert, verticesLeft)
+
+            run Dijktra on plan to find the shortest path
 
 
         function subPlan(plan.lastVert, verticesLeft)
@@ -59,7 +65,7 @@ public class HeuristicPlanner {
                 plan.lastVert.addChild(op(v))
                 subPlan(plan.lastVert, verticesLeft)
 
-        run Dijktra on plan to find the shortest path
+
 
          */
 
