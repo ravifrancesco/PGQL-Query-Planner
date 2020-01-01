@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 public class Main {
     public static void main(String args[]){
-        Node nodeA = new Node("A");
+        /*Node nodeA = new Node("A");
         Node nodeB = new Node("B");
         Node nodeC = new Node("C");
         Node nodeD = new Node("D");
@@ -60,5 +60,7 @@ public class Main {
         }
 
         //System.out.println(graph.toString());
+
+         */
     }
 }

@@ -76,7 +76,7 @@ public class NeighborMatchPlan extends ConstraintsArrayBuilder implements QueryP
     }
 
     // computes cost if boolean outgoing is true
-    private double computeCostOutgoing(Statistics statistics) {
+    private double computeCostOutgoing(Statistics statistics) throws ColumnDataTypeException {
 
         double searchCost;
         double dstVertexSelectivity;
@@ -105,7 +105,7 @@ public class NeighborMatchPlan extends ConstraintsArrayBuilder implements QueryP
     }
 
     // computes cost if outgoing is false
-    private double computeCostIngoing(Statistics statistics) {
+    private double computeCostIngoing(Statistics statistics) throws ColumnDataTypeException {
 
         double binarySearchCost;
         double dstVertexSelectivity;
@@ -135,7 +135,7 @@ public class NeighborMatchPlan extends ConstraintsArrayBuilder implements QueryP
     }
 
     // computes total selectivity of given vertex constraints
-    private double computeTotalVertexSelectivity(ArrayList<Constraint> constraints, Statistics statistics, int totalCardinality) throws ColumnDataTypeException {
+    private double computeTotalVertexSelectivity(ArrayList<Constraint> constraints, Statistics statistics) throws ColumnDataTypeException {
 
         double selectivity = 1;
 

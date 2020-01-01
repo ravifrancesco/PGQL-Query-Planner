@@ -35,7 +35,7 @@ public class CartesianProductPlan implements QueryPlan, Comparable<QueryPlan> {
 
     // constructor
     public CartesianProductPlan(QueryVertex leftQueryVertex, QueryVertex rightQueryVertex,
-                                QueryPlan parentPlan1, Settings settings, Statistics statistics) {
+                                QueryPlan parentPlan1, Settings settings, Statistics statistics) throws ColumnDataTypeException {
 
         this.parent1 = parentPlan1;
         this.parent2 = this.parent1.getParentPlan();

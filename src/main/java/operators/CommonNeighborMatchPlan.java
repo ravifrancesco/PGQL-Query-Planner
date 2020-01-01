@@ -47,7 +47,7 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
     public CommonNeighborMatchPlan(QueryVertex leftQueryVertex, QueryVertex rightQueryVertex, QueryVertex vertexToFind,
                                    boolean leftOutgoing, boolean rightOutgoing,
                                    QueryPlan parentPlan1, Settings settings,
-                                   Set<QueryExpression> constraintsSet, Statistics statistics) {
+                                   Set<QueryExpression> constraintsSet, Statistics statistics) throws ColumnDataTypeException {
 
         this.parent = parentPlan1;
         if (parent instanceof CartesianProductPlan) {
@@ -74,7 +74,7 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
 
     // computes cost of the operator
     @Override
-    public double computeCost(Statistics statistics) {
+    public double computeCost(Statistics statistics) throws ColumnDataTypeException {
 
          /*
          Da implementare per i due outgoing
@@ -94,7 +94,7 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
     }
 
     // computes cost if leftOutgoing and rightOutgoing are both true ( a -> b <- c )
-    private double computeCostBothOutgoing(Statistics statistics) {
+    private double computeCostBothOutgoing(Statistics statistics) throws ColumnDataTypeException {
 
         double neighborSearchCost;
         double binarySearchCost;
@@ -127,7 +127,7 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
     }
 
     // computes cost if leftOutgoing is true and rightOutgoing is false ( a -> b -> c ) (DA IMPLEMENTARE)
-    private double computeCostLeftOutgoing(Statistics statistics) {
+    private double computeCostLeftOutgoing(Statistics statistics) throws ColumnDataTypeException {
 
         double neighborSearchCost;
         double binarySearchCost;
@@ -159,7 +159,7 @@ public class CommonNeighborMatchPlan extends ConstraintsArrayBuilder implements 
     }
 
     // computes total cardinality of given vertex constraints
-    private double computeTotalVertexSelectivity(ArrayList<Constraint> constraints, Statistics statistics, int totalCardinality) throws ColumnDataTypeException {
+    private double computeTotalVertexSelectivity(ArrayList<Constraint> constraints, Statistics statistics) throws ColumnDataTypeException {
 
         double selectivity = 1;
 
