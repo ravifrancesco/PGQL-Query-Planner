@@ -1,12 +1,41 @@
+import graph.dataSketches.setup.GraphSketchCreate;
+import graph.statistics.EstimateBounds;
+import graph.statistics.Statistics;
 import heuristic.utils.Dijkstra;
 import heuristic.utils.Graph;
 import heuristic.utils.Node;
+import settings.Settings;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Main {
-    public static void main(String args[]){
+    public static void main(String args[]) throws IOException {
+
+        Statistics statistics;
+        Settings settings = new Settings();
+
+        GraphSketchCreate graphSketchCreate = new GraphSketchCreate("IMDB_GRAPH");
+        graphSketchCreate.setVertexCsvPath("Path per il CSV dei vertex");
+        graphSketchCreate.setEdgeCsvPath("Path per il CSV degli edge");
+
+        statistics = new Statistics("IMDB_GRAPH", EstimateBounds.ESTIMATE);
+
+        /*
+
+        DA TESTARE IN SEGUITO
+
+        System.out.println(statistics.getGraphName());
+
+        int vertexTableLength = statistics.getVertexTableLength();
+        int averageVertexDegree = statistics.getAverageVertexDegree();
+
+        double vertexFilterSelectivity = statistics.getEdgeFilterSelectivity();
+        double edgeFilterSelecitviy = statistics.getEdgeFilterSelectivity();
+        */
+
+
         /*Node nodeA = new Node("A");
         Node nodeB = new Node("B");
         Node nodeC = new Node("C");

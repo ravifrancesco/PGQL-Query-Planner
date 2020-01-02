@@ -153,4 +153,22 @@ public class GraphSketchCreate {
 
     }
 
+    // setters
+    public void setVertexCsvPath(String vertexCsvPath) {
+        this.vertexCsvPath = vertexCsvPath;
+    }
+
+    public void setEdgeCsvPath(String edgeCsvPath) {
+        this.edgeCsvPath = edgeCsvPath;
+    }
+
+    // getters
+    public String getVertexCsvPath() {
+        return vertexCsvPath;
+    }
+
+    public String getEdgeCsvPath() {
+        return edgeCsvPath;
+    }
+
 }

@@ -1,0 +1,15 @@
+oracle/pgql/lang/spatial/Point2DTest.class
+oracle/pgql/lang/completions/AbstractCompletionsTest.class
+oracle/pgql/lang/AbstractPgqlTest.class
+oracle/pgql/lang/Experimental.class
+oracle/pgql/lang/PrettyPrintingTest.class
+oracle/pgql/lang/completions/InputGraphCompletionsTest.class
+oracle/pgql/lang/StaticOptimizationsTest.class
+oracle/pgql/lang/completions/ExpressionCompletionsTest.class
+oracle/pgql/lang/completions/KeywordCompletionsTest.class
+oracle/pgql/lang/completions/AbstractCompletionsTest$1.class
+oracle/pgql/lang/completions/LabelCompletionsTest.class
+oracle/pgql/lang/completions/PropertyCompletionsTest.class
+oracle/pgql/lang/completions/PatternCompletionsTest.class
+oracle/pgql/lang/BugFixTest.class
+oracle/pgql/lang/SyntaxErrorsTest.class
