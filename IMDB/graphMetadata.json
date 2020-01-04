@@ -1,1 +1,0 @@
-{"graphName":"/home/ravi/coding/PGQL-Query-Planner/IMDB","vertexTableLength":13387,"edgeTableLength":19553,"vertexCsvColumns":{"role":"NUM","name":"STRING","id":"NUM","type":"STRING"},"edgeCsvColumns":{"role":"STRING","level":"NUM","source":"NUM","dest":"NUM"}}
