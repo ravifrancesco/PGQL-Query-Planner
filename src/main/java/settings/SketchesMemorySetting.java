@@ -10,8 +10,8 @@ package settings;
 
 public class SketchesMemorySetting {
 
-    int mostFrequentVertexItemsNum = 64;
-    int mostFrequentEdgeItemsNum = 64;
+    int mostFrequentVertexItemsNum = 16;
+    int mostFrequentEdgeItemsNum = 16;
     int defaultFrequentItemsNum = 32;
 
     int quantileSketchVertexK = 128;

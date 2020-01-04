@@ -1,3 +1,4 @@
+import exceptions.ColumnDataTypeException;
 import graph.dataSketches.setup.GraphSketchCreate;
 import graph.statistics.EstimateBounds;
 import graph.statistics.Statistics;
@@ -5,22 +6,26 @@ import heuristic.utils.Dijkstra;
 import heuristic.utils.Graph;
 import heuristic.utils.Node;
 import settings.Settings;
+import settings.SketchesMemorySetting;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Main {
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) throws IOException, ColumnDataTypeException {
 
         Statistics statistics;
         Settings settings = new Settings();
+        SketchesMemorySetting sketchesMemorySetting = new SketchesMemorySetting();
+        settings.setSketchesMemorySetting(sketchesMemorySetting);
 
-        GraphSketchCreate graphSketchCreate = new GraphSketchCreate("IMDB_GRAPH");
-        graphSketchCreate.setVertexCsvPath("Path per il CSV dei vertex");
-        graphSketchCreate.setEdgeCsvPath("Path per il CSV degli edge");
+        GraphSketchCreate graphSketchCreate = new GraphSketchCreate("IMDB");
+        graphSketchCreate.setVertexCsvPath("/home/ravi/Downloads/imdb_csv/imdb_v.csv");
+        graphSketchCreate.setEdgeCsvPath("/home/ravi/Downloads/imdb_csv/imdb_e.csv");
+        graphSketchCreate.graphToSketches(settings);
 
-        statistics = new Statistics("IMDB_GRAPH", EstimateBounds.ESTIMATE);
+        //statistics = new Statistics("IMDB", EstimateBounds.ESTIMATE);
 
         /*
 
