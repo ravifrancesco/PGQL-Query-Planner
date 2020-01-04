@@ -2,6 +2,8 @@ package graph.dataSketches.setup;
 
 import exceptions.ColumnDataTypeException;
 import exceptions.UnexpectedCSVType;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.datasketches.ArrayOfStringsSerDe;
 import org.apache.datasketches.frequencies.ItemsSketch;
 import org.apache.datasketches.quantiles.DoublesSketch;
@@ -11,6 +13,7 @@ import org.apache.datasketches.theta.UpdateSketch;
 import settings.Settings;
 import settings.SketchesMemorySetting;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -102,8 +105,10 @@ public class GraphColumnSketchesWrite {
     }
 
     // handles saving of distinctCountingSketch to .bin file
-    private void saveDistinctCountingSketchToFile(String columnDir) {
-        try (FileOutputStream outQuantileSketch = new FileOutputStream(columnDir + "/QuantileSketch.bin")) {
+    private void saveQuantileSketchToFile(String columnDir) {
+
+        //try (FileOutputStream outQuantileSketch = new FileOutputStream(columnDir + "QuantileSketch.bin")) {
+        try (FileOutputStream outQuantileSketch = FileUtils.openOutputStream((new File(columnDir + "QuantileSketch.bin")))) {
             outQuantileSketch.write(this.quantileSketch.compact().toByteArray());
             outQuantileSketch.close();
         } catch (IOException e) {
@@ -113,7 +118,8 @@ public class GraphColumnSketchesWrite {
 
     // handles saving of mostFrequentSketch to .bin file
     private void saveMostFrequentSketchToFile(String columnDir) {
-        try (FileOutputStream outMostFrequentSketch = new FileOutputStream(columnDir + "/MostFrequentSketch.bin")) {
+        //try (FileOutputStream outMostFrequentSketch = new FileOutputStream(columnDir + "MostFrequentSketch.bin")) {
+        try (FileOutputStream outMostFrequentSketch = FileUtils.openOutputStream((new File(columnDir + "MostFrequentSketch.bin")))) {
             outMostFrequentSketch.write(this.mostFrequentSketch.toByteArray(new ArrayOfStringsSerDe()));
             outMostFrequentSketch.close();
         } catch (FileNotFoundException e) {
@@ -124,8 +130,10 @@ public class GraphColumnSketchesWrite {
     }
 
     // handles saving of quantileSketch to .bin file
-    private void saveQuantileSketchToFile(String columnDir) {
-        try (FileOutputStream outDistinctCountingSketch = new FileOutputStream(columnDir + "/DistinctCountingSketch.bin")) {
+    private void saveDistinctCountingSketchToFile(String columnDir) {
+
+        //try (FileOutputStream outDistinctCountingSketch = new FileOutputStream(columnDir + "DistinctCountingSketch.bin")) {
+        try (FileOutputStream outDistinctCountingSketch = FileUtils.openOutputStream((new File(columnDir + "DistinctCountingSketch.bin")))) {
             outDistinctCountingSketch.write(this.distinctCountingSketch.compact().toByteArray());
             outDistinctCountingSketch.close();
         } catch (FileNotFoundException e) {
@@ -189,9 +197,9 @@ public class GraphColumnSketchesWrite {
         String columnDir;
 
         if (this.csvType == CsvTypes.VERTEX) {
-            columnDir = '/' + graphName + '/' + "vertex" + '/' + columnName;
+            columnDir = graphName + '/' + "vertex" + '/' + columnName + '/';
         } else if (this.csvType == CsvTypes.EDGE) {
-            columnDir = '/' + graphName + '/' + "edge" + '/' + columnName;
+            columnDir = graphName + '/' + "edge" + '/' + columnName + '/';
         } else {
             columnDir = null; //Aggiungere gestione type sbagliato
             throw new UnexpectedCSVType();
@@ -199,6 +207,23 @@ public class GraphColumnSketchesWrite {
 
         return columnDir;
 
+    }
+
+    // getters
+    public ColumnDataTypes getColumnType() {
+        return columnType;
+    }
+
+    public UpdateSketch getDistinctCountingSketch() {
+        return distinctCountingSketch;
+    }
+
+    public ItemsSketch<String> getMostFrequentSketch() {
+        return mostFrequentSketch;
+    }
+
+    public UpdateDoublesSketch getQuantileSketch() {
+        return quantileSketch;
     }
 
 }

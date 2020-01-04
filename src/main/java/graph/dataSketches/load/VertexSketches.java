@@ -29,7 +29,7 @@ public class VertexSketches extends SketchLoader {
         this.vertexCsvPath = graphMetadata.getVertexCsvPath();
         this.vertexTableLength = graphMetadata.getVertexTableLength();
         this.vertexCsvColumns = graphMetadata.getVertexCsvColumns();
-        this.vertexSketchesPath = graphMetadata.returnSketchesDirPath() +  "edge/";
+        this.vertexSketchesPath = graphMetadata.returnSketchesDirPath() +  "vertex/";
 
         this.loadVertexSketches();
 

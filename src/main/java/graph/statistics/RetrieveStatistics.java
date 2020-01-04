@@ -99,19 +99,19 @@ public class RetrieveStatistics {
     }
 
     // create split points for num selectivity
-    private double[] createSplitPoints(double value, Comparators comparator){
+    private double[] createSplitPoints(double value, Comparators comparator){ // DA SISTEMARE
         if (comparator == Comparators.EQUAL) {
-            return new double[] {value, value};
+            return new double[] {value -1, value +1};
         } else if (comparator == Comparators.NOT_EQUAL) {
-            return new double[] {value, value};
+            return new double[] {value -1, value +1};
         } else if (comparator == Comparators.LESS) {
             return new double[] {value};
         } else if (comparator == Comparators.GREATER) {
             return new double[] {value};
         } else if (comparator == Comparators.LESS_EQUAL) {
-            return new double[] {value, value};
+            return new double[] {value -1, value +1};
         } else if (comparator == Comparators.GREATER_EQUAL) {
-            return new double[] {value, value};
+            return new double[] {value -1, value +1};
         } else {
             return null;
         }

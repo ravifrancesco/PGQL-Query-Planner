@@ -26,7 +26,7 @@ public class GraphColumnSketchesRead {
 
     // reads distinctCountingSketches from .bin
     public void readDistinctCountingSketch(String pathToColumnFolder) throws IOException {
-        FileInputStream inDistinctCountingSketch = new FileInputStream( pathToColumnFolder + "distinctCountingSketch.bin");
+        FileInputStream inDistinctCountingSketch = new FileInputStream( pathToColumnFolder + "DistinctCountingSketch.bin");
         byte[] bytes = new byte[inDistinctCountingSketch.available()];
         inDistinctCountingSketch.read(bytes);
         inDistinctCountingSketch.close();
@@ -35,7 +35,7 @@ public class GraphColumnSketchesRead {
 
     // reads mostFrequentSketch from .bin
     public void readMostFrequentSketch(String pathToColumnFolder) throws IOException {
-        FileInputStream inMostFrequentSketch = new FileInputStream( pathToColumnFolder + "mostFrequentSketch.bin");
+        FileInputStream inMostFrequentSketch = new FileInputStream( pathToColumnFolder + "MostFrequentSketch.bin");
         byte[] bytes = new byte[inMostFrequentSketch.available()];
         inMostFrequentSketch.read(bytes);
         inMostFrequentSketch.close();
@@ -44,7 +44,7 @@ public class GraphColumnSketchesRead {
 
     // reads quantileSketch from .bin
     public void readQuantileSketch(String pathToColumnFolder) throws IOException {
-        FileInputStream inQuantileSketch = new FileInputStream(pathToColumnFolder + "quantileSketch.bin");
+        FileInputStream inQuantileSketch = new FileInputStream(pathToColumnFolder + "QuantileSketch.bin");
         byte[] bytes = new byte[inQuantileSketch.available()];
         inQuantileSketch.read(bytes);
         inQuantileSketch.close();

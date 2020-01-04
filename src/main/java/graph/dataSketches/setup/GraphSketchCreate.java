@@ -6,6 +6,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import settings.Settings;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -54,12 +55,13 @@ public class GraphSketchCreate {
 
         this.vertexTableLength = csvToSketches(this.graphVertexSketches, this.vertexCsvPath, CsvTypes.VERTEX);
         this.edgeTableLength = csvToSketches(this.graphEdgeSketches, this.edgeCsvPath, CsvTypes.EDGE);
-        saveGraphSketchesToFile(graphVertexSketches);
-        saveGraphSketchesToFile(graphEdgeSketches);
+        saveGraphSketchesToFile(this.graphVertexSketches);
+        saveGraphSketchesToFile(this.graphEdgeSketches);
 
         GraphMetadata graphMetadata = new GraphMetadata(this.graphName, this.vertexTableLength, this.edgeTableLength,
                                                         this.graphVertexSketches, this.graphEdgeSketches);
         graphMetadata.saveMetadataToJson();
+
     }
 
     // handles the parsing of the Csv
@@ -70,7 +72,7 @@ public class GraphSketchCreate {
         int tableLength;
 
         try (
-                Reader reader = Files.newBufferedReader(Paths.get(this.vertexCsvPath));
+                Reader reader = Files.newBufferedReader(Paths.get(csvPath));
                 CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
                         .withFirstRecordAsHeader()
                         .withIgnoreHeaderCase()

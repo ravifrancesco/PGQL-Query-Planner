@@ -2,6 +2,7 @@ package graph.dataSketches.setup;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -37,16 +38,20 @@ public class GraphMetadata {
         }
 
         for (String key: graphEdgeSketches.keySet()) {
-            this.vertexCsvColumns.put(key, graphEdgeSketches.get(key).columnDataTypes());
+            this.edgeCsvColumns.put(key, graphEdgeSketches.get(key).columnDataTypes());
         }
 
     }
 
     // saves this object to file in /graphName/graphMetadata.json
     public void saveMetadataToJson () throws IOException {
-        String savingPath = returnSketchesDirPath() + "graphMetadata.json";
+
         Gson gson = new Gson();
-        gson.toJson(this, new FileWriter(savingPath));
+        try(FileWriter writer = new FileWriter(new File(returnSketchesDirPath() + "graphMetadata.json"))) {
+            gson.toJson(this, writer);
+            writer.flush();
+        }
+
     }
 
     // returns path for sketches
