@@ -79,7 +79,7 @@ public class GraphSketchCreate {
                         .withTrim());
         ) {
             csvHeaders = csvParser.getHeaderNames();
-            System.out.println(csvHeaders.toString()); //Testing purposes
+            //System.out.println(csvHeaders.toString());
             tableLength = createSketches(graphSketches, csvParser, csvHeaders, type);
             return tableLength;
         } catch (ColumnDataTypeException e) {

@@ -7,7 +7,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0950be99-28e4-4b31-bf6e-fc3870458894" name="Default Changelist" comment="Testing">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/QueryPlanning_jar.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/IMDB/edge/dest/QuantileSketch.bin" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/IMDB/edge/level/QuantileSketch.bin" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/IMDB/edge/role/DistinctCountingSketch.bin" afterDir="false" />
@@ -20,12 +19,20 @@
       <change afterPath="$PROJECT_DIR$/IMDB/vertex/role/QuantileSketch.bin" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/IMDB/vertex/type/DistinctCountingSketch.bin" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/IMDB/vertex/type/MostFrequentSketch.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/imdb_csv/imdb.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/imdb_csv/imdb_e.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/imdb_csv/imdb_v.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/imdb_csv/test.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/out/artifacts/QueryPlanning_jar/QueryPlanning.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/META-INF/MANIFEST.MF" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/QueryPlanning_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/QueryPlanning_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/graph/dataSketches/setup/GraphSketchCreate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/graph/dataSketches/setup/GraphSketchCreate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/QueryPlanning.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/dataSketches/setup/GraphSketchCreate.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/graph/dataSketches/setup/GraphSketchCreate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/META-INF/QueryPlanning.kotlin_module" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +118,8 @@
       <workItem from="1578135593670" duration="88000" />
       <workItem from="1578166439470" duration="10301000" />
       <workItem from="1578179443086" duration="93000" />
-      <workItem from="1578179550611" duration="630000" />
+      <workItem from="1578179550611" duration="2266000" />
+      <workItem from="1578182463476" duration="853000" />
     </task>
     <task id="LOCAL-00001" summary="Ready for testing">
       <created>1577902634231</created>
@@ -186,15 +194,15 @@
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
     <state x="418" y="213" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1577884234021" />
-    <state x="683" y="342" width="525" height="434" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1578179577893">
+    <state x="683" y="342" width="525" height="434" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1578182439220">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
-    <state x="683" y="342" width="525" height="434" key="#com.intellij.ide.util.TreeClassChooserDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578179577893" />
-    <state x="540" y="146" width="975" height="821" key="CommitChangelistDialog2" timestamp="1578180078221">
+    <state x="683" y="342" width="525" height="434" key="#com.intellij.ide.util.TreeClassChooserDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578182439220" />
+    <state x="540" y="146" width="975" height="821" key="CommitChangelistDialog2" timestamp="1578183261190">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
     <state x="540" y="146" width="830" height="821" key="CommitChangelistDialog2/0.30.1920.1050/0.30.1920.1050@0.30.1920.1050" timestamp="1577902634098" />
-    <state x="540" y="146" width="975" height="821" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578180078221" />
+    <state x="540" y="146" width="975" height="821" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578183261190" />
     <state x="712" y="270" width="476" height="574" key="DetectedRootsChooserDialog" timestamp="1577883296515">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
@@ -203,22 +211,22 @@
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
     <state x="599" y="299" width="701" height="517" key="FileChooserDialogImpl/0.30.1920.1050@0.30.1920.1050" timestamp="1578171404450" />
-    <state width="1872" height="275" key="GridCell.Tab.0.bottom" timestamp="1578176290596">
+    <state width="1872" height="275" key="GridCell.Tab.0.bottom" timestamp="1578182446424">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
-    <state width="1872" height="275" key="GridCell.Tab.0.bottom/0.30.1920.1050@0.30.1920.1050" timestamp="1578176290596" />
-    <state width="1872" height="275" key="GridCell.Tab.0.center" timestamp="1578176290596">
+    <state width="1872" height="275" key="GridCell.Tab.0.bottom/0.30.1920.1050@0.30.1920.1050" timestamp="1578182446424" />
+    <state width="1872" height="275" key="GridCell.Tab.0.center" timestamp="1578182446423">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
-    <state width="1872" height="275" key="GridCell.Tab.0.center/0.30.1920.1050@0.30.1920.1050" timestamp="1578176290596" />
-    <state width="1872" height="275" key="GridCell.Tab.0.left" timestamp="1578176290596">
+    <state width="1872" height="275" key="GridCell.Tab.0.center/0.30.1920.1050@0.30.1920.1050" timestamp="1578182446423" />
+    <state width="1872" height="275" key="GridCell.Tab.0.left" timestamp="1578182446421">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
-    <state width="1872" height="275" key="GridCell.Tab.0.left/0.30.1920.1050@0.30.1920.1050" timestamp="1578176290596" />
-    <state width="1872" height="275" key="GridCell.Tab.0.right" timestamp="1578176290596">
+    <state width="1872" height="275" key="GridCell.Tab.0.left/0.30.1920.1050@0.30.1920.1050" timestamp="1578182446421" />
+    <state width="1872" height="275" key="GridCell.Tab.0.right" timestamp="1578182446424">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
-    <state width="1872" height="275" key="GridCell.Tab.0.right/0.30.1920.1050@0.30.1920.1050" timestamp="1578176290596" />
+    <state width="1872" height="275" key="GridCell.Tab.0.right/0.30.1920.1050@0.30.1920.1050" timestamp="1578182446424" />
     <state width="1872" height="340" key="GridCell.Tab.1.bottom" timestamp="1578167336018">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
@@ -239,11 +247,11 @@
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
     <state x="493" y="213" width="924" height="687" key="Maven.ArtifactSearchDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1577883203499" />
-    <state x="443" y="132" width="1024" height="848" key="SettingsEditor" timestamp="1578179734190">
+    <state x="443" y="132" width="1024" height="848" key="SettingsEditor" timestamp="1578182488743">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
     <state x="443" y="132" key="SettingsEditor/0.30.1920.1050/0.30.1920.1050@0.30.1920.1050" timestamp="1577902459303" />
-    <state x="443" y="132" width="1024" height="848" key="SettingsEditor/0.30.1920.1050@0.30.1920.1050" timestamp="1578179734190" />
+    <state x="443" y="132" width="1024" height="848" key="SettingsEditor/0.30.1920.1050@0.30.1920.1050" timestamp="1578182488743" />
     <state x="555" y="291" width="800" height="531" key="Vcs.Push.Dialog.v2" timestamp="1578176798170">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
