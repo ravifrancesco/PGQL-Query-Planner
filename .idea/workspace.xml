@@ -6,33 +6,62 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0950be99-28e4-4b31-bf6e-fc3870458894" name="Default Changelist" comment="Testing">
-      <change afterPath="$PROJECT_DIR$/IMDB/edge/dest/QuantileSketch.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMDB/edge/level/QuantileSketch.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMDB/edge/role/DistinctCountingSketch.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMDB/edge/role/MostFrequentSketch.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMDB/edge/source/QuantileSketch.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMDB/graphMetadata.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMDB/vertex/id/QuantileSketch.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMDB/vertex/name/DistinctCountingSketch.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMDB/vertex/name/MostFrequentSketch.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMDB/vertex/role/QuantileSketch.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMDB/vertex/type/DistinctCountingSketch.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMDB/vertex/type/MostFrequentSketch.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imdb_csv/imdb.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imdb_csv/imdb_e.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imdb_csv/imdb_v.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imdb_csv/test.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/artifacts/QueryPlanning_jar/QueryPlanning.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/QueryPlanning_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/QueryPlanning_jar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/graph/dataSketches/setup/GraphSketchCreate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/graph/dataSketches/setup/GraphSketchCreate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/QueryPlanning.kotlin_module" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/graph/dataSketches/setup/GraphSketchCreate.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/graph/dataSketches/setup/GraphSketchCreate.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/META-INF/QueryPlanning.kotlin_module" beforeDir="false" />
+    <list default="true" id="0950be99-28e4-4b31-bf6e-fc3870458894" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/IMDB/edge/dest/QuantileSketch.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMDB/edge/level/QuantileSketch.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMDB/edge/role/DistinctCountingSketch.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMDB/edge/role/MostFrequentSketch.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMDB/edge/source/QuantileSketch.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMDB/graphMetadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMDB/vertex/id/QuantileSketch.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMDB/vertex/name/DistinctCountingSketch.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMDB/vertex/name/MostFrequentSketch.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMDB/vertex/role/QuantileSketch.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMDB/vertex/type/DistinctCountingSketch.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMDB/vertex/type/MostFrequentSketch.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/QueryPlanning_jar/QueryPlanning.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/exceptions/ColumnDataTypeException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/exceptions/SketchBoundException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/exceptions/UnexpectedCSVType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/dataSketches/load/EdgeSketches.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/dataSketches/load/GraphColumnSketchesRead.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/dataSketches/load/SketchLoader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/dataSketches/load/VertexSketches.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/dataSketches/setup/ColumnDataTypes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/dataSketches/setup/CsvTypes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/dataSketches/setup/GraphColumnSketchesWrite.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/dataSketches/setup/GraphMetadata.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/dataSketches/setup/GraphSketchCreate.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/statistics/Comparators.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/statistics/EstimateBounds.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/statistics/GetSketches.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/statistics/RetrieveStatistics.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/graph/statistics/Statistics.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/heuristic/HeuristicPlanner.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/heuristic/utils/Dijkstra.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/heuristic/utils/Graph.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/heuristic/utils/Node.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/operators/CartesianProductPlan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/operators/CommonNeighborMatchPlan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/operators/ConstantVertexMatchPlan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/operators/EdgeMatchPlan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/operators/NeighborMatchPlan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/operators/QueryPlan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/operators/ReachabilityPlan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/operators/RootVertexMatchPlan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/operators/utils/Constraint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/operators/utils/ConstraintType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/operators/utils/ConstraintsArrayBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/settings/GraphSettings.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/settings/HardwareCostSettings.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/settings/Settings.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/settings/SketchesMemorySetting.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/settings/StatisticsSettings.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/settings/utils/HardwareBenchmark.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/csv/imdb_e.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/csv/imdb_v.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,7 +148,7 @@
       <workItem from="1578166439470" duration="10301000" />
       <workItem from="1578179443086" duration="93000" />
       <workItem from="1578179550611" duration="2266000" />
-      <workItem from="1578182463476" duration="853000" />
+      <workItem from="1578182463476" duration="1124000" />
     </task>
     <task id="LOCAL-00001" summary="Ready for testing">
       <created>1577902634231</created>
@@ -142,7 +171,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578133679206</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Testing">
+      <created>1578183410848</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1578183410848</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
