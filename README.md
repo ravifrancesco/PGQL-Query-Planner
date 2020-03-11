@@ -8,5 +8,5 @@ Run from an IDE to perform some test on the precision and speed.
 
 ### CONTRIBUTORS
 
-[@andrezann](https://github.com/andreazann)
+[@andrezann](https://github.com/andreazann)  
 [@ravifrancesco](https://github.com/ravifrancesco)
