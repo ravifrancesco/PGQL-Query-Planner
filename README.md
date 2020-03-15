@@ -2,6 +2,8 @@
 
 ### PLEASE CHECK OUT THE REPORT IN THE REPOSITORY
 
+Query planner for graph queries using [PGQL](http://pgql-lang.org/) (Property Graph Query Language).
+
 For now the planner is able to compute statistics on graphs. This operation is fast and precise (please refer to the Report in the repository). The planning part itself is still in development.
 
 Run from an IDE to perform some test on the precision and speed.
